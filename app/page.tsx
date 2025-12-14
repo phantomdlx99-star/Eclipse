@@ -1,14 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Navbar from "@/components/Navbar";
 import {
   Rocket,
   Users,
   Award,
   PlayCircle,
   ArrowRight,
-  Menu,
-  X,
   Star,
   Plus,
   Twitter,
@@ -23,19 +22,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Link as ScrollLink, Element } from "react-scroll";
+
 export default function EclipseLanding() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  // Handle scroll effect for navbar
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   // Intersection Observer for fade-in animations
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -55,8 +43,6 @@ export default function EclipseLanding() {
 
     return () => observer.disconnect();
   }, []);
-
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
     <div className="min-h-screen bg-[#0B0F19] text-gray-100 font-sans selection:bg-[#F59E0B] selection:text-[#0B0F19] overflow-x-hidden">
@@ -95,157 +81,66 @@ export default function EclipseLanding() {
       `}</style>
 
       {/* Navigation */}
-      <nav
-        className={`fixed w-full z-50 border-b border-white/10 transition-all duration-300 ${
-          isScrolled ? "glass-nav shadow-lg" : "bg-transparent"
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
-            {/* Logo */}
-            <div className="shrink-0 flex items-center gap-2 cursor-pointer group">
-              <div className="relative w-8 h-8 flex items-center justify-center">
-                <div className="absolute inset-0 rounded-full bg-[#F59E0B] blur-md opacity-20 group-hover:opacity-40 transition-opacity"></div>
-                <Circle
-                  className="w-8 h-8 text-[#0B0F19] fill-[#0B0F19] absolute z-10"
-                  strokeWidth={1.5}
-                />
-                <div className="w-8 h-8 rounded-full border-2 border-[#F59E0B] absolute z-0"></div>
-                <div className="w-full h-full rounded-full bg-[#0B0F19] absolute top-0 left-1"></div>
-              </div>
-              <span className="font-display font-bold text-2xl tracking-tight text-white">
-                Eclipse
+      <Navbar />
+      {/* Hero Section */}
+      <Element name="home">
+        <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full z-0 hero-glow pointer-events-none"></div>
+          <div className="absolute top-20 right-0 w-96 h-96 bg-indigo-900/30 rounded-full blur-3xl -z-10 animate-pulse"></div>
+          <div className="absolute bottom-0 left-0 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl -z-10"></div>
+
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center animate-on-scroll opacity-0 translate-y-10 transition-all duration-700">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8 backdrop-blur-sm">
+              <span className="w-2 h-2 rounded-full bg-[#F59E0B] animate-pulse"></span>
+              <span className="text-sm font-medium text-gray-300">
+                New: AI-Powered Learning Paths
               </span>
             </div>
 
-            {/* Desktop Menu */}
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-8">
-                {["Features", "Courses", "Mentors", "Pricing"].map((item) => (
-                  <ScrollLink
-                    to={item}
-                    offset={-100}
-                    duration={1000}
-                    smooth={true}
-                    key={item}
-                    href={`#${item.toLowerCase()}`}
-                    className="hover:text-[#F59E0B] transition-colors px-3 py-2 rounded-md text-sm font-medium"
-                  >
-                    {item}
-                  </ScrollLink>
-                ))}
-              </div>
-            </div>
+            <h1 className="text-5xl md:text-7xl font-display font-bold tracking-tight mb-6 leading-tight">
+              Knowledge that <br />
+              <span className="gradient-text">Eclipses the Rest</span>
+            </h1>
 
-            {/* CTA Buttons */}
-            <div className="hidden md:flex items-center gap-4">
-              <button className="text-sm font-medium hover:text-white text-gray-300 transition-colors">
-                Log in
-              </button>
+            <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-400 mb-10">
+              Master the skills of tomorrow with our immersive, expert-led
+              platform. Where darkness fades, brilliance begins.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Link href={"/learn"}>
-                <button className="bg-[#F59E0B] hover:bg-amber-400 text-[#0B0F19] px-5 py-2.5 rounded-full font-bold text-sm transition-all transform hover:scale-105 shadow-[0_0_15px_rgba(245,158,11,0.3)]">
-                  Get Started
+                <button className="w-full sm:w-auto px-8 py-4 bg-[#F59E0B] hover:bg-amber-400 text-[#0B0F19] font-bold rounded-full text-lg transition-all transform hover:-translate-y-1 shadow-[0_0_20px_rgba(245,158,11,0.4)] flex items-center justify-center gap-2">
+                  Start Learning Now
+                  <ArrowRight size={20} fontWeight="bold" />
                 </button>
               </Link>
-            </div>
-
-            {/* Mobile menu button */}
-            <div className="-mr-2 flex md:hidden">
-              <button
-                onClick={toggleMenu}
-                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none"
-              >
-                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              <button className="w-full sm:w-auto px-8 py-4 bg-transparent border border-gray-600 hover:border-white text-white font-medium rounded-full text-lg transition-all hover:bg-white/5 flex items-center justify-center gap-2">
+                <PlayCircle size={24} fontWeight="fill" />
+                Watch Demo
               </button>
             </div>
-          </div>
-        </div>
 
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="md:hidden bg-[#0B0F19] border-b border-white/10 absolute w-full">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              {["Features", "Courses", "Mentors"].map((item) => (
-                <a
-                  key={item}
-                  href={`#${item.toLowerCase()}`}
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-800"
-                >
-                  {item}
-                </a>
-              ))}
-              <a
-                href="#"
-                className="block px-3 py-2 rounded-md text-base font-medium text-[#F59E0B]"
-              >
-                Log In
-              </a>
-              <a
-                href="#"
-                className="block px-3 py-2 mt-4 text-center rounded-md text-base font-bold bg-[#F59E0B] text-[#0B0F19]"
-              >
-                Sign Up Free
-              </a>
-            </div>
-          </div>
-        )}
-      </nav>
-
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full z-0 hero-glow pointer-events-none"></div>
-        <div className="absolute top-20 right-0 w-96 h-96 bg-indigo-900/30 rounded-full blur-3xl -z-10 animate-pulse"></div>
-        <div className="absolute bottom-0 left-0 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl -z-10"></div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center animate-on-scroll opacity-0 translate-y-10 transition-all duration-700">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8 backdrop-blur-sm">
-            <span className="w-2 h-2 rounded-full bg-[#F59E0B] animate-pulse"></span>
-            <span className="text-sm font-medium text-gray-300">
-              New: AI-Powered Learning Paths
-            </span>
-          </div>
-
-          <h1 className="text-5xl md:text-7xl font-display font-bold tracking-tight mb-6 leading-tight">
-            Knowledge that <br />
-            <span className="gradient-text">Eclipses the Rest</span>
-          </h1>
-
-          <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-400 mb-10">
-            Master the skills of tomorrow with our immersive, expert-led
-            platform. Where darkness fades, brilliance begins.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link href={"/learn"}>
-              <button className="w-full sm:w-auto px-8 py-4 bg-[#F59E0B] hover:bg-amber-400 text-[#0B0F19] font-bold rounded-full text-lg transition-all transform hover:-translate-y-1 shadow-[0_0_20px_rgba(245,158,11,0.4)] flex items-center justify-center gap-2">
-                Start Learning Now
-                <ArrowRight size={20} fontWeight="bold" />
-              </button>
-            </Link>
-            <button className="w-full sm:w-auto px-8 py-4 bg-transparent border border-gray-600 hover:border-white text-white font-medium rounded-full text-lg transition-all hover:bg-white/5 flex items-center justify-center gap-2">
-              <PlayCircle size={24} fontWeight="fill" />
-              Watch Demo
-            </button>
-          </div>
-
-          {/* Stats */}
-          <div className="mt-16 grid grid-cols-2 gap-8 md:grid-cols-4 border-t border-white/10 pt-12">
-            {[
-              { val: "50k+", label: "Learners" },
-              { val: "200+", label: "Expert Mentors" },
-              { val: "1.5k", label: "Courses" },
-              { val: "4.9/5", label: "User Rating" },
-            ].map((stat, idx) => (
-              <div key={idx}>
-                <div className="text-3xl font-bold text-white">{stat.val}</div>
-                <div className="text-sm text-gray-500 uppercase tracking-wider mt-1">
-                  {stat.label}
+            {/* Stats */}
+            <div className="mt-16 grid grid-cols-2 gap-8 md:grid-cols-4 border-t border-white/10 pt-12">
+              {[
+                { val: "50k+", label: "Learners" },
+                { val: "200+", label: "Expert Mentors" },
+                { val: "1.5k", label: "Courses" },
+                { val: "4.9/5", label: "User Rating" },
+              ].map((stat, idx) => (
+                <div key={idx}>
+                  <div className="text-3xl font-bold text-white">
+                    {stat.val}
+                  </div>
+                  <div className="text-sm text-gray-500 uppercase tracking-wider mt-1">
+                    {stat.label}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </Element>
 
       {/* Trusted By */}
       <section className="py-10 border-y border-white/5 bg-black/20">

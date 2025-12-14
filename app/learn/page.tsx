@@ -1,3 +1,4 @@
+import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import React from "react";
 // Assuming a typical setup where react icons/svgs are available or imported,
@@ -177,48 +178,50 @@ const subjectData = [
 
 const App = () => {
   return (
-    <div className="bg-gray-900 min-h-screen py-10 font-sans">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <header className="text-center mb-16">
-          {/* Changed text color to white */}
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-4">
-            Educational Program Catalog (Next.js Example)
-          </h1>
-          {/* Changed text color to gray-400 */}
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-            Explore available classes and detailed subject pathways designed for
-            student success.
-          </p>
-        </header>
+    <section>
+      <div className="bg-gray-900 min-h-screen py-10 font-sans">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header */}
+          <header className="text-center mb-16">
+            {/* Changed text color to white */}
+            <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-4">
+              Educational Program Catalog (Next.js Example)
+            </h1>
+            {/* Changed text color to gray-400 */}
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+              Explore available classes and detailed subject pathways designed
+              for student success.
+            </p>
+          </header>
 
-        {/* Classes Card Section */}
-        <section className="mb-16">
-          {/* Changed text color to gray-100 and border color to indigo-700 */}
-          <h2 className="text-3xl font-bold text-gray-100 mb-8 border-b-2 border-indigo-700 pb-2">
-            Classes / Grades Available
-          </h2>
-          <div className="grid grid-cols-2 auto-rows-auto max-sm:grid-cols-1 max-md:grid-cols-2 gap-8">
-            {classData.map((data, index) => (
-              <ClassCard key={index} {...data} />
-            ))}
-          </div>
-        </section>
+          {/* Classes Card Section */}
+          <section className="mb-16">
+            {/* Changed text color to gray-100 and border color to indigo-700 */}
+            <h2 className="text-3xl font-bold text-gray-100 mb-8 border-b-2 border-indigo-700 pb-2">
+              Classes / Grades Available
+            </h2>
+            <div className="grid grid-cols-2 auto-rows-auto max-sm:grid-cols-1 max-md:grid-cols-2 gap-8">
+              {classData.map((data, index) => (
+                <ClassCard key={index} {...data} />
+              ))}
+            </div>
+          </section>
 
-        {/* Subjects Card Section */}
-        <section>
-          {/* Changed text color to gray-100 and border color to green-700 */}
-          <h2 className="text-3xl font-bold text-gray-100 mb-8 border-b-2 border-green-700 pb-2">
-            Core Subjects Portfolio
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-6">
-            {subjectData.map((data, index) => (
-              <SubjectCard key={index} {...data} />
-            ))}
-          </div>
-        </section>
+          {/* Subjects Card Section */}
+          <section>
+            {/* Changed text color to gray-100 and border color to green-700 */}
+            <h2 className="text-3xl font-bold text-gray-100 mb-8 border-b-2 border-green-700 pb-2">
+              Core Subjects Portfolio
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-6">
+              {subjectData.map((data, index) => (
+                <SubjectCard key={index} {...data} />
+              ))}
+            </div>
+          </section>
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 
