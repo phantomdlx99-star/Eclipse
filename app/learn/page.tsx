@@ -1,6 +1,8 @@
-import Navbar from "@/components/Navbar";
+"use client";
+
 import Link from "next/link";
 import React from "react";
+import { useState, useEffect, useRef } from "react";
 // Assuming a typical setup where react icons/svgs are available or imported,
 // We will use standard inline SVGs for the feature icons.
 
@@ -177,48 +179,121 @@ const subjectData = [
 // --- 4. Main App Component ---
 
 const App = () => {
+  const Reveal = ({ children, delay = 0, direction = "up" }: any) => {
+    const [isVisible, setIsVisible] = useState(false);
+    const ref = useRef(null);
+
+    useEffect(() => {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          // Trigger animation when 10% of the element is visible
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+            // Optional: Stop observing once visible so it doesn't re-animate
+            observer.unobserve(entry.target);
+          }
+        },
+        {
+          threshold: 0.1,
+          rootMargin: "0px 0px -50px 0px", // Trigger slightly before bottom
+        }
+      );
+
+      if (ref.current) {
+        observer.observe(ref.current);
+      }
+
+      return () => {
+        if (ref.current) {
+          observer.unobserve(ref.current);
+        }
+      };
+    }, []);
+
+    const getInitialTransform = () => {
+      switch (direction) {
+        case "left":
+          return "-translate-x-24";
+        case "right":
+          return "translate-x-24";
+        case "down":
+          return "-translate-y-24";
+        case "up":
+        default:
+          return "translate-y-24";
+      }
+    };
+
+    return (
+      <div
+        ref={ref}
+        style={{ transitionDelay: `${delay}ms` }}
+        className={`transform transition-all duration-1000 ease-out ${
+          isVisible
+            ? "opacity-100 translate-y-0 translate-x-0"
+            : `opacity-0 ${getInitialTransform()}`
+        }`}
+      >
+        {children}
+      </div>
+    );
+  };
+
   return (
-    <section>
+    <section className="relative">
       <div className="bg-gray-900 min-h-screen py-10 font-sans">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
-          <header className="text-center mb-16">
-            {/* Changed text color to white */}
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-4">
-              Educational Program Catalog (Next.js Example)
-            </h1>
-            {/* Changed text color to gray-400 */}
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-              Explore available classes and detailed subject pathways designed
-              for student success.
-            </p>
-          </header>
+          <Reveal>
+            <header className="text-center mb-16 animate-on-scroll">
+              {/* Changed text color to white */}
+              <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-4">
+                Educational Program Catalog (Next.js Example)
+              </h1>
+              {/* Changed text color to gray-400 */}
+              <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+                Explore available classes and detailed subject pathways designed
+                for student success.
+              </p>
+            </header>
+          </Reveal>
 
           {/* Classes Card Section */}
-          <section className="mb-16">
-            {/* Changed text color to gray-100 and border color to indigo-700 */}
-            <h2 className="text-3xl font-bold text-gray-100 mb-8 border-b-2 border-indigo-700 pb-2">
-              Classes / Grades Available
-            </h2>
-            <div className="grid grid-cols-2 auto-rows-auto max-sm:grid-cols-1 max-md:grid-cols-2 gap-8">
-              {classData.map((data, index) => (
-                <ClassCard key={index} {...data} />
-              ))}
-            </div>
-          </section>
+          <Reveal delay={300}>
+            <section className="mb-16 animate-on-scroll">
+              {/* Changed text color to gray-100 and border color to indigo-700 */}
+              <div className="flex justify-between items-start px-5">
+                <h2 className="text-3xl font-bold text-gray-100 mb-8 border-b-2 border-indigo-700 pb-2">
+                  Classes / Grades Available
+                </h2>
+                <Link href={"/"}>
+                  <button className="bg-[#F59E0B] hover:bg-amber-400 text-[#0B0F19] px-5 py-2.5 rounded-full font-bold text-sm transition-all transform hover:scale-105 shadow-[0_0_15px_rgba(245,158,11,0.3)]">
+                    Go Back
+                  </button>
+                </Link>
+              </div>
+              <div className="grid grid-cols-2 auto-rows-auto max-sm:grid-cols-1 max-md:grid-cols-2 gap-8">
+                {classData.map((data, index) => (
+                  <ClassCard key={index} {...data} />
+                ))}
+              </div>
+            </section>
+          </Reveal>
 
           {/* Subjects Card Section */}
-          <section>
-            {/* Changed text color to gray-100 and border color to green-700 */}
-            <h2 className="text-3xl font-bold text-gray-100 mb-8 border-b-2 border-green-700 pb-2">
-              Core Subjects Portfolio
-            </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-6">
-              {subjectData.map((data, index) => (
-                <SubjectCard key={index} {...data} />
-              ))}
-            </div>
-          </section>
+          <Reveal direction="right" delay={0}>
+            <section className="animate-on-scroll">
+              {/* Changed text color to gray-100 and border color to green-700 */}
+              <h2 className="text-3xl font-bold text-gray-100 mb-8 border-b-2 border-green-700 pb-2">
+                Core Subjects Portfolio
+              </h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-6">
+                {subjectData.map((data, index) => (
+                  <SubjectCard key={index} {...data} />
+                ))}
+              </div>
+            </section>
+          </Reveal>
         </div>
       </div>
     </section>
