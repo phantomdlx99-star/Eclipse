@@ -135,7 +135,6 @@ const App = () => {
   const Reveal = ({ children, delay = 0, direction = "up" }: any) => {
     const [isVisible, setIsVisible] = useState(false);
     const ref = useRef(null);
-
     useEffect(() => {
       const observer = new IntersectionObserver(
         ([entry]) => {
@@ -192,12 +191,20 @@ const App = () => {
     );
   };
 
+  const [loading, setLoading] = useState(false);
   const [newClassData, setNewClassData] = useState<Object[]>([]);
   const getData = async () => {
-    const req = await axios.get("/api/class");
-    const { data } = req;
-    console.log(data);
-    setNewClassData(data);
+    try {
+      setLoading(true);
+      const req = await axios.get("/api/class");
+      const { data } = req;
+      console.log(data);
+      setNewClassData(data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -237,11 +244,15 @@ const App = () => {
                   </button>
                 </Link>
               </div>
-              <div className="grid grid-cols-2 auto-rows-auto max-sm:grid-cols-1 max-md:grid-cols-2 gap-8">
-                {newClassData.map((data, index) => (
-                  <ClassCard key={index} {...data} />
-                ))}
-              </div>
+              {loading ? (
+                <div>Loading...</div>
+              ) : (
+                <div className="grid grid-cols-2 auto-rows-auto max-sm:grid-cols-1 max-md:grid-cols-2 gap-8">
+                  {newClassData.map((data, index) => (
+                    <ClassCard key={index} {...data} />
+                  ))}
+                </div>
+              )}
             </section>
           </Reveal>
 

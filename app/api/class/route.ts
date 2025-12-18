@@ -2,7 +2,7 @@
 
 import dbConnect from "@/lib/mongodb";
 import { NextResponse } from "next/server";
-import Classes from "@/lib/model/Class";
+import { Classes } from "@/lib/model/Class";
 import { revalidatePath } from "next/cache";
 
 export async function POST(req: Request) {
@@ -52,6 +52,5 @@ export async function GET() {
   await dbConnect();
 
   const classes = await Classes.find().sort({ gradeNumber: 1 }).exec();
-  revalidatePath("/learn");
   return NextResponse.json(classes);
 }
