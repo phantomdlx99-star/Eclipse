@@ -35,7 +35,7 @@ export default function EclipseLanding() {
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     const elements = document.querySelectorAll(".animate-on-scroll");
@@ -96,7 +96,6 @@ export default function EclipseLanding() {
                 New: AI-Powered Learning Paths
               </span>
             </div>
-
             <h1 className="text-5xl md:text-7xl font-display font-bold tracking-tight mb-6 leading-tight">
               Knowledge that <br />
               <span className="gradient-text">Eclipses the Rest</span>
@@ -472,7 +471,7 @@ export default function EclipseLanding() {
                         {item}
                       </a>
                     </li>
-                  )
+                  ),
                 )}
               </ul>
             </div>

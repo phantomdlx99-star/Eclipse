@@ -17,7 +17,7 @@ const Navbar = () => {
   // Handle scroll effect for navbar
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 28);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -26,13 +26,19 @@ const Navbar = () => {
   return (
     <nav
       className={`fixed w-full z-50 border-b border-white/10 transition-all duration-300 ${
-        isScrolled ? "glass-nav shadow-lg" : "bg-transparent"
+        isScrolled ? "glass-nav shadow-lg py-1" : "bg-transparent  py-4"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <ScrollLink to="home" offset={100} duration={1000} smooth={true}>
+          <ScrollLink
+            to="home"
+            offset={20}
+            duration={1000}
+            smooth={true}
+            spy={true}
+          >
             <div className="shrink-0 flex items-center gap-2 cursor-pointer group">
               <div className="relative w-8 h-8 flex items-center justify-center">
                 <div className="absolute inset-0 rounded-full bg-[#F59E0B] blur-md opacity-20 group-hover:opacity-40 transition-opacity"></div>
@@ -59,6 +65,7 @@ const Navbar = () => {
                   duration={1000}
                   smooth={true}
                   key={item}
+                  spy={true}
                   href={`#${item.toLowerCase()}`}
                   className="hover:text-[#F59E0B] transition-colors px-3 py-2 rounded-md text-sm font-medium"
                 >
@@ -71,7 +78,7 @@ const Navbar = () => {
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center gap-4">
             {isSignedIn ? (
-              <UserButton />
+              <UserButton userProfileMode="modal" />
             ) : (
               <Link href={"/sign-in"}>
                 <button className="text-sm font-medium hover:text-white text-gray-300 transition-colors">

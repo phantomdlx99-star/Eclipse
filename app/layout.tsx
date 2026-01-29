@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Roboto, Montserrat } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
-import Navbar from "@/components/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const monsterrat = Montserrat({
+  variable: "--font-monsterrat",
   subsets: ["latin"],
 });
 
@@ -26,10 +30,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider appearance={dark}>
-      <html lang="en">
+    <ClerkProvider
+      appearance={{
+        variables: {
+          fontFamily: monsterrat.style.fontFamily,
+        },
+        theme: dark,
+      }}
+    >
+      <html lang="en" className="dark">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased ubuntu-medium`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased ubuntu-medium selection:bg-yellow-400`}
         >
           {children}
         </body>
