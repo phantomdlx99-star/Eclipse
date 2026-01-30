@@ -16,7 +16,7 @@ const ClassCard: React.FC<ClassCardProps> = ({ classData }) => {
   };
 
   return (
-    <div className="group relative overflow-hidden rounded-(--radius) border border-border bg-card p-1 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/20 dark:bg-card/50">
+    <div className="group relative overflow-hidden rounded-lg border border-border bg-card p-1 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/20 dark:bg-card/50">
       {/* Visual Texture/Glow Effect */}
       <div className="absolute -right-12 -top-12 h-32 w-32 rounded-full bg-primary/10 blur-3xl transition-opacity group-hover:opacity-100" />
 
