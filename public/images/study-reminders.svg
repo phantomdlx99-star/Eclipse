@@ -1,0 +1,45 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="200" height="200" fill="#1a1f2e" rx="20"/>
+  
+  <!-- Gradient definition -->
+  <defs>
+    <linearGradient id="goldGradient3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f59e0b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fcd34d;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Clock face -->
+  <circle cx="100" cy="85" r="35" fill="none" stroke="url(#goldGradient3)" stroke-width="2.5"/>
+  
+  <!-- Clock center dot -->
+  <circle cx="100" cy="85" r="3" fill="#f59e0b"/>
+  
+  <!-- Clock hands -->
+  <line x1="100" y1="85" x2="100" y2="55" stroke="url(#goldGradient3)" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="100" y1="85" x2="120" y2="85" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Clock numbers (simplified) -->
+  <text x="100" y="52" text-anchor="middle" fill="#f59e0b" font-size="8" font-weight="bold">12</text>
+  <text x="133" y="88" text-anchor="middle" fill="#f59e0b" font-size="8" font-weight="bold">3</text>
+  <text x="100" y="122" text-anchor="middle" fill="#f59e0b" font-size="8" font-weight="bold">6</text>
+  <text x="67" y="88" text-anchor="middle" fill="#f59e0b" font-size="8" font-weight="bold">9</text>
+  
+  <!-- Bell top -->
+  <circle cx="100" cy="35" r="6" fill="none" stroke="url(#goldGradient3)" stroke-width="2"/>
+  <rect x="98" y="32" width="4" height="5" fill="#f59e0b"/>
+  
+  <!-- Notification waves/pulses -->
+  <circle cx="150" cy="60" r="8" fill="none" stroke="#f59e0b" stroke-width="1.5" opacity="0.6"/>
+  <circle cx="150" cy="60" r="13" fill="none" stroke="#f59e0b" stroke-width="1" opacity="0.3"/>
+  
+  <circle cx="55" cy="60" r="8" fill="none" stroke="#f59e0b" stroke-width="1.5" opacity="0.6"/>
+  <circle cx="55" cy="60" r="13" fill="none" stroke="#f59e0b" stroke-width="1" opacity="0.3"/>
+  
+  <!-- Schedule text indicator -->
+  <rect x="40" y="140" width="120" height="35" fill="none" stroke="url(#goldGradient3)" stroke-width="1.5" rx="4"/>
+  <line x1="45" y1="152" x2="155" y2="152" stroke="#f59e0b" stroke-width="1" opacity="0.5"/>
+  <line x1="45" y1="160" x2="155" y2="160" stroke="#f59e0b" stroke-width="1" opacity="0.5"/>
+  <line x1="45" y1="168" x2="130" y2="168" stroke="#f59e0b" stroke-width="1" opacity="0.5"/>
+</svg>
