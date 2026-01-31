@@ -124,12 +124,12 @@ const Navbar = () => {
             >
               Log In
             </a>
-            <a
-              href="#"
+            <Link
+              href="/sign-in"
               className="block px-3 py-2 mt-4 text-center rounded-md text-base font-bold bg-[#F59E0B] text-[#0B0F19]"
             >
               Sign Up Free
-            </a>
+            </Link>
           </div>
         </div>
       )}
