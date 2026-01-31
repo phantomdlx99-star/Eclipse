@@ -17,7 +17,7 @@ const PrevQuiz = ({ quizData }: { quizData: any }) => {
       </h2>
 
       <div className="mt-10 grid grid-cols-1 w-full h-auto justify-center items-center gap-4">
-        {answers.map((item: any, idx: any) => (
+        {answers?.map((item: any, idx: any) => (
           <div
             className="px-5 py-4 w-full h-auto border-3 border-primary rounded-2xl before:content-[''] before:absolute before:-top-5 before:-right-5 before:rounded-full before:w-20 before:h-20 relative before:bg-primary overflow-hidden z-5 before:-z-1 pr-10"
             key={crypto.randomUUID()}
@@ -32,7 +32,13 @@ const PrevQuiz = ({ quizData }: { quizData: any }) => {
               Correct: {item.correct}
             </h2>
           </div>
-        ))}
+        )) ?? (
+          <div>
+            <h1 className="text-2xl fond-bold font-display text-white">
+              It seems like the answers were not saved
+            </h1>
+          </div>
+        )}
       </div>
     </div>
   );

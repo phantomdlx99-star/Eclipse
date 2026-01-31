@@ -23,11 +23,14 @@ export function AppSidebar({ history }: { history: any[] }) {
               {history.map((item) => (
                 <SidebarMenuItem key={item._id}>
                   <SidebarMenuButton asChild>
-                    <Link href={`/quiz-generator/${item._id}`}>
+                    <Link
+                      href={`/quiz-generator/${item._id}`}
+                      className="w-full h-auto rounded-[7px]"
+                    >
                       <History className="mr-2 h-4 w-4" />
-                      <span>
-                        Score: {item.score}/{item.totalQuestions}
-                      </span>
+                      <h2 className="text-lg font-display capitalize">
+                        {item.subjectId}: {item.chapterId}
+                      </h2>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

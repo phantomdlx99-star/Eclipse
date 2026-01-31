@@ -45,6 +45,8 @@ export default function QuizGenerator({ classId, subjectId, chapterId }: any) {
 
   const isFinished = totalQuestions > 0 && answeredCount === totalQuestions;
 
+  const [saved, setSaved] = useState(false);
+
   const handleSave = async () => {
     const resultData = {
       subjectId,
@@ -52,14 +54,17 @@ export default function QuizGenerator({ classId, subjectId, chapterId }: any) {
       score: correctCount,
       totalQuestions,
       answers: quiz?.map((q, i) => ({
-        question: q.question,
-        selected: selectedAnswers[i],
-        correct: q.answer,
+        question: q.question, // Matches schema
+        selected: selectedAnswers[i], // Matches schema
+        correct: q.answer, // Matches schema
       })),
     };
 
+    console.log(resultData.answers);
+
     try {
       await saveQuizResult(resultData);
+      setSaved(true);
       return toast.success("Quiz Successfully saved", {
         position: "top-center",
       });
@@ -131,7 +136,7 @@ export default function QuizGenerator({ classId, subjectId, chapterId }: any) {
                         key={opt}
                         onClick={() => handleSelect(qIdx, opt)}
                         disabled={hasAnswered}
-                        className={`text-left p-4 rounded-xl border border-white/5 transition-all ${bgColor} ${!hasAnswered && "hover:bg-primary/20 hover:border-primary/50"}`}
+                        className={`text-left p-4 rounded-xl border border-white/5 transition-all font-display ${bgColor} ${!hasAnswered && "hover:bg-primary/20 hover:border-primary/50 font-display cursor-pointer text-lg"}`}
                       >
                         {opt}
                       </button>
@@ -161,11 +166,17 @@ export default function QuizGenerator({ classId, subjectId, chapterId }: any) {
                 Try Again
               </button>
               <button
-                className="bg-primary text-black font-bold py-2 px-6 rounded-full hover:scale-105 transition-transform"
+                className={`bg-primary text-black font-bold py-2 px-6 rounded-full hover:scale-105 transition-transform ${saved ? "cursor-not-allowed opacity-90" : ""}`}
                 onClick={handleSave}
+                disabled={saved}
               >
                 Save Progress
               </button>
+              <Link href={`/quiz-generator`}>
+                <button className="bg-primary hover:scale-105 transition-transform text-black font-bold py-3 px-8 rounded-full disabled:opacity-50">
+                  See previous Quiz
+                </button>
+              </Link>
             </div>
           </div>
         )}
