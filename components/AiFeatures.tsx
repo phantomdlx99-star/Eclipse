@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import React from "react";
-import Button from "./Button";
 import { useRouter } from "next/navigation";
+import { Button } from "./ui/button";
+import { ArrowRight } from "lucide-react";
 
 const AiFeatures = ({
   title,
@@ -40,14 +40,16 @@ const AiFeatures = ({
         </h2>
       </div>
       <Button
-        label="Explore Feature"
-        direction="right"
         onClick={() =>
           router.push(
             `/learn/${payLoad.classId}/${payLoad.subjectId}/${payLoad.chapterId}/${slug}`,
           )
         }
-      />
+        className="w-full h-auto flex justify-center items-center gap-2 text-lg"
+      >
+        Explore Feature
+        <ArrowRight size={18} />
+      </Button>
     </div>
   );
 };

@@ -33,6 +33,21 @@ export default function QuizGenerator({ classId, subjectId, chapterId }: any) {
     }));
   };
 
+  // Total questions in the quiz
+  const totalQuestions = quiz?.length || 0;
+
+  // Number of questions the user has answered
+  const answeredCount = Object.keys(selectedAnswers).length;
+
+  // Number of correct answers
+  const correctCount =
+    quiz?.reduce((acc, q, idx) => {
+      return selectedAnswers[idx] === q.answer ? acc + 1 : acc;
+    }, 0) || 0;
+
+  // Boolean to check if quiz is finished
+  const isFinished = totalQuestions > 0 && answeredCount === totalQuestions;
+
   return (
     <div className="min-h-screen p-8 text-white">
       <div className="max-w-4xl mx-auto">
@@ -95,6 +110,31 @@ export default function QuizGenerator({ classId, subjectId, chapterId }: any) {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+        {/* Place this inside your return, likely at the bottom or top of the quiz list */}
+        {isFinished && (
+          <div className="glass-nav p-8 rounded-3xl border border-primary/30 text-center mb-10 animate-in fade-in zoom-in duration-500 mt-6 relative before:content-[''] before:absolute before:-top-5 before:-right-5 overflow-hidden before:w-20 before:h-20 before:bg-primary before:rounded-full z-4">
+            <h2 className="text-3xl font-bold gradient-text mb-2 font-display">
+              Quiz Complete!
+            </h2>
+            <p className="text-gray-300 mb-6 ubuntu-medium">
+              You scored{" "}
+              <span className="text-primary text-2xl">{correctCount}</span> out
+              of {totalQuestions}
+            </p>
+
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={() => window.location.reload()}
+                className="bg-white/10 hover:bg-white/20 border border-white/10 py-2 px-6 rounded-full transition-all"
+              >
+                Try Again
+              </button>
+              <button className="bg-primary text-black font-bold py-2 px-6 rounded-full hover:scale-105 transition-transform">
+                Save Progress
+              </button>
+            </div>
           </div>
         )}
       </div>

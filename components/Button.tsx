@@ -1,6 +1,7 @@
 "use client";
 
-import { ArrowLeft, ArrowRight, Loader } from "lucide-react";
+import { ArrowLeft, ArrowRight, Home, Loader } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React, { ButtonHTMLAttributes } from "react";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -56,6 +57,8 @@ const Button = ({
     }
   };
 
+  const router = useRouter();
+
   const getArrowIcon = () => {
     if (isLoading) {
       return <Loader size={18} className="animate-spin" />;
@@ -69,17 +72,29 @@ const Button = ({
     return null;
   };
 
-  return (
-    <button
-      onClick={handleClick}
-      disabled={disabled || isLoading}
-      className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${widthStyle} ${className || ""}`}
-      {...props}
-    >
-      {label}
-      {getArrowIcon()}
-    </button>
-  );
+  {
+    label === "Go Home" ? (
+      <button
+        onClick={() => router.push("/learn")}
+        disabled={disabled || isLoading}
+        className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${widthStyle} ${className || ""}`}
+        {...props}
+      >
+        {label}
+        <Home size={18} />
+      </button>
+    ) : (
+      <button
+        onClick={handleClick}
+        disabled={disabled || isLoading}
+        className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${widthStyle} ${className || ""}`}
+        {...props}
+      >
+        {label}
+        {getArrowIcon()}
+      </button>
+    );
+  }
 };
 
 export default Button;
