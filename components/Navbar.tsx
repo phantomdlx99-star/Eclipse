@@ -94,13 +94,26 @@ const Navbar = () => {
           </div>
 
           {/* Mobile menu button */}
-          <div className="-mr-2 flex md:hidden">
+          <div className="-mr-2 flex md:hidden justify-center gap-3">
             <button
               onClick={toggleMenu}
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none"
             >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              {isMenuOpen ? (
+                <X size={24} className="transition-all duration-300" />
+              ) : (
+                <Menu size={24} className="transition-all duration-300" />
+              )}
             </button>
+            {isSignedIn ? (
+              <UserButton userProfileMode="modal" />
+            ) : (
+              <Link href={"/sign-in"}>
+                <button className="text-sm font-medium hover:text-white text-gray-300 transition-colors">
+                  Log in
+                </button>
+              </Link>
+            )}
           </div>
         </div>
       </div>
@@ -118,18 +131,13 @@ const Navbar = () => {
                 {item}
               </a>
             ))}
-            <a
-              href="#"
-              className="block px-3 py-2 rounded-md text-base font-medium text-[#F59E0B]"
-            >
-              Log In
-            </a>
-            <Link
-              href="/sign-in"
-              className="block px-3 py-2 mt-4 text-center rounded-md text-base font-bold bg-[#F59E0B] text-[#0B0F19]"
-            >
-              Sign Up Free
-            </Link>
+            {!isSignedIn && (
+              <Link href={"/sign-in"}>
+                <button className="text-sm font-medium hover:text-white text-gray-300 transition-colors">
+                  Log in
+                </button>
+              </Link>
+            )}
           </div>
         </div>
       )}
