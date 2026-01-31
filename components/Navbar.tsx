@@ -109,7 +109,7 @@ const Navbar = () => {
               <UserButton userProfileMode="modal" />
             ) : (
               <Link href={"/sign-in"}>
-                <button className="text-sm font-medium hover:text-white text-gray-300 transition-colors">
+                <button className="text-sm font-medium hover:text-white text-black transition-colors w-auto px-6 py-4 bg-primary rounded-full font-display">
                   Log in
                 </button>
               </Link>
@@ -133,7 +133,7 @@ const Navbar = () => {
             ))}
             {!isSignedIn && (
               <Link href={"/sign-in"}>
-                <button className="text-sm font-medium hover:text-white text-gray-300 transition-colors">
+                <button className="text-sm font-medium hover:text-white transition-colors w-full rounded-full text-black font-display mx-auto h-auto px-5 py-2 bg-primary ">
                   Log in
                 </button>
               </Link>
