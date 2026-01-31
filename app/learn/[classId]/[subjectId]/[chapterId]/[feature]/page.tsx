@@ -1,5 +1,6 @@
 import QuizGenerator from "@/components/QuizGenerator";
 import generateQuiz from "@/lib/actions/featuresActions";
+import Link from "next/link";
 
 const page = async ({
   params,
@@ -17,11 +18,13 @@ const page = async ({
   switch (feature) {
     case "quiz-generator":
       return (
-        <QuizGenerator
-          classId={classId}
-          subjectId={subjectId}
-          chapterId={chapterId}
-        />
+        <main className="w-full h-auto">
+          <QuizGenerator
+            classId={classId}
+            subjectId={subjectId}
+            chapterId={chapterId}
+          />
+        </main>
       );
 
     default:

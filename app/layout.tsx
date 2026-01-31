@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Roboto, Montserrat } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,7 +43,8 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased ubuntu-medium selection:bg-yellow-400`}
         >
-          {children}
+          <main>{children}</main>
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>

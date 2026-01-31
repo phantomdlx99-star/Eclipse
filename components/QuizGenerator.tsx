@@ -1,17 +1,18 @@
 // components/QuizGenerator.tsx
 "use client";
-import generateQuiz from "@/lib/actions/featuresActions";
-import React, { useRef, useState } from "react";
+import generateQuiz, { getQuizHistory } from "@/lib/actions/featuresActions";
+import { useEffect, useRef, useState } from "react";
+import { saveQuizResult } from "@/lib/actions/featuresActions";
+import { toast } from "sonner";
+import Link from "next/link";
 
 export default function QuizGenerator({ classId, subjectId, chapterId }: any) {
   const [loading, setLoading] = useState(false);
   const [quiz, setQuiz] = useState<any[] | null>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
   const [selectedAnswers, setSelectedAnswers] = useState<
     Record<number, string>
   >({});
 
-  // This would typically call your Gemini API Server Action
   const handleGenerate = async () => {
     setLoading(true);
     try {
@@ -33,20 +34,42 @@ export default function QuizGenerator({ classId, subjectId, chapterId }: any) {
     }));
   };
 
-  // Total questions in the quiz
   const totalQuestions = quiz?.length || 0;
 
-  // Number of questions the user has answered
   const answeredCount = Object.keys(selectedAnswers).length;
 
-  // Number of correct answers
   const correctCount =
     quiz?.reduce((acc, q, idx) => {
       return selectedAnswers[idx] === q.answer ? acc + 1 : acc;
     }, 0) || 0;
 
-  // Boolean to check if quiz is finished
   const isFinished = totalQuestions > 0 && answeredCount === totalQuestions;
+
+  const handleSave = async () => {
+    const resultData = {
+      subjectId,
+      chapterId,
+      score: correctCount,
+      totalQuestions,
+      answers: quiz?.map((q, i) => ({
+        question: q.question,
+        selected: selectedAnswers[i],
+        correct: q.answer,
+      })),
+    };
+
+    try {
+      await saveQuizResult(resultData);
+      return toast.success("Quiz Successfully saved", {
+        position: "top-center",
+      });
+    } catch (error) {
+      console.error("Error saving:", error);
+      return toast.error("Error while saving the quiz", {
+        position: "top-center",
+      });
+    }
+  };
 
   return (
     <div className="min-h-screen p-8 text-white">
@@ -64,13 +87,20 @@ export default function QuizGenerator({ classId, subjectId, chapterId }: any) {
             <h2 className="text-2xl mb-6 ubuntu-medium">
               Ready to test your knowledge?
             </h2>
-            <button
-              onClick={handleGenerate}
-              disabled={loading}
-              className="bg-primary hover:scale-105 transition-transform text-black font-bold py-3 px-8 rounded-full disabled:opacity-50"
-            >
-              {loading ? "AI is thinking..." : "Generate Quiz Now"}
-            </button>
+            <div className="flex justify-center gap-5">
+              <button
+                onClick={handleGenerate}
+                disabled={loading}
+                className="bg-primary hover:scale-105 transition-transform text-black font-bold py-3 px-8 rounded-full disabled:opacity-50"
+              >
+                {loading ? "AI is thinking..." : "Generate Quiz Now"}
+              </button>
+              <Link href={`/quiz-generator`}>
+                <button className="bg-primary hover:scale-105 transition-transform text-black font-bold py-3 px-8 rounded-full disabled:opacity-50">
+                  See previous Quiz
+                </button>
+              </Link>
+            </div>
           </div>
         ) : (
           <div className="space-y-6">
@@ -112,7 +142,6 @@ export default function QuizGenerator({ classId, subjectId, chapterId }: any) {
             ))}
           </div>
         )}
-        {/* Place this inside your return, likely at the bottom or top of the quiz list */}
         {isFinished && (
           <div className="glass-nav p-8 rounded-3xl border border-primary/30 text-center mb-10 animate-in fade-in zoom-in duration-500 mt-6 relative before:content-[''] before:absolute before:-top-5 before:-right-5 overflow-hidden before:w-20 before:h-20 before:bg-primary before:rounded-full z-4">
             <h2 className="text-3xl font-bold gradient-text mb-2 font-display">
@@ -131,7 +160,10 @@ export default function QuizGenerator({ classId, subjectId, chapterId }: any) {
               >
                 Try Again
               </button>
-              <button className="bg-primary text-black font-bold py-2 px-6 rounded-full hover:scale-105 transition-transform">
+              <button
+                className="bg-primary text-black font-bold py-2 px-6 rounded-full hover:scale-105 transition-transform"
+                onClick={handleSave}
+              >
                 Save Progress
               </button>
             </div>

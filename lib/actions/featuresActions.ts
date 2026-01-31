@@ -1,6 +1,9 @@
 "use server";
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { connectToDB } from "../mongodb";
+import { QuizResult } from "../model/quizResult";
+import { auth } from "@clerk/nextjs/server";
 
 const genAi = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
@@ -32,3 +35,39 @@ const generateQuiz = async (
 };
 
 export default generateQuiz;
+
+export async function saveQuizResult(data: any) {
+  const { userId } = await auth();
+  if (!userId) throw new Error("Unauthorized");
+
+  await connectToDB();
+  const newResult = await QuizResult.create({
+    clerkId: userId,
+    ...data,
+  });
+  return JSON.parse(JSON.stringify(newResult));
+}
+
+export async function getQuizHistory() {
+  const { userId } = await auth();
+  if (!userId) return [];
+
+  await connectToDB();
+  const history = await QuizResult.find({ clerkId: userId }).sort({
+    createdAt: -1,
+  });
+  return JSON.parse(JSON.stringify(history));
+}
+
+export async function getPrevQuizHistory(id: any) {
+  const { userId } = await auth();
+  if (!userId) return [];
+
+  await connectToDB();
+  const history = await QuizResult.findOne({
+    clerkId: userId,
+    _id: id,
+  });
+  console.log(history);
+  return JSON.parse(JSON.stringify(history));
+}
