@@ -1,6 +1,8 @@
+import Loading from "@/app/loading";
 import QuizGenerator from "@/components/QuizGenerator";
 import generateQuiz from "@/lib/actions/featuresActions";
 import Link from "next/link";
+import { Suspense } from "react";
 
 const page = async ({
   params,
@@ -19,11 +21,13 @@ const page = async ({
     case "quiz-generator":
       return (
         <main className="w-full h-auto">
-          <QuizGenerator
-            classId={classId}
-            subjectId={subjectId}
-            chapterId={chapterId}
-          />
+          <Suspense fallback={<Loading />}>
+            <QuizGenerator
+              classId={classId}
+              subjectId={subjectId}
+              chapterId={chapterId}
+            />
+          </Suspense>
         </main>
       );
 

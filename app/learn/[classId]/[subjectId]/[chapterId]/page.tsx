@@ -1,6 +1,7 @@
 import React from "react";
 import AiFeatures from "@/components/AiFeatures";
-import { title } from "process";
+import { Suspense } from "react";
+import Loading from "@/app/loading";
 
 const page = async ({
   params,
@@ -34,26 +35,28 @@ const page = async ({
 
   return (
     <main>
-      <div>
-        <h1 className="text-3xl text-center text-white font-bold uppercase">
-          AI powered learning tools
-        </h1>
-        <h2 className="text-center text-xl text-gray-400">
-          Unleash your full potential with these intelligent tools
-        </h2>
-      </div>
-      <div className="w-full h-auto grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 mt-15 px-5 py-3">
-        {features.map((feature: any) => (
-          <AiFeatures
-            key={crypto.randomUUID()}
-            title={feature.title}
-            description={feature.description}
-            image={feature.image}
-            payLoad={{ classId, subjectId, chapterId }}
-            slug={feature.slug}
-          />
-        ))}
-      </div>
+      <Suspense fallback={<Loading />}>
+        <div>
+          <h1 className="text-3xl text-center text-white font-bold uppercase">
+            AI powered learning tools
+          </h1>
+          <h2 className="text-center text-xl text-gray-400">
+            Unleash your full potential with these intelligent tools
+          </h2>
+        </div>
+        <div className="w-full h-auto grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 mt-15 px-5 py-3">
+          {features.map((feature: any) => (
+            <AiFeatures
+              key={crypto.randomUUID()}
+              title={feature.title}
+              description={feature.description}
+              image={feature.image}
+              payLoad={{ classId, subjectId, chapterId }}
+              slug={feature.slug}
+            />
+          ))}
+        </div>
+      </Suspense>
     </main>
   );
 };

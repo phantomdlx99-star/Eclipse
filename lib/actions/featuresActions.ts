@@ -15,7 +15,7 @@ const generateQuiz = async (
 ) => {
   const history = await getQuizHistory();
   console.log(history);
-  if (history.length > 5) redirect("/");
+  if (history.length > 12) redirect("/");
 
   const model = genAi.getGenerativeModel({
     model: "gemini-2.5-flash",
