@@ -38,10 +38,11 @@ export default function QuizGenerator({ classId, subjectId, chapterId }: any) {
 
   const answeredCount = Object.keys(selectedAnswers).length;
 
-  const correctCount =
-    quiz?.reduce((acc, q, idx) => {
-      return selectedAnswers[idx] === q.answer ? acc + 1 : acc;
-    }, 0) || 0;
+  const correctCount = Array.isArray(quiz)
+    ? quiz?.reduce((acc, q, idx) => {
+        return selectedAnswers[idx] === q.answer ? acc + 1 : acc;
+      }, 0)
+    : 0;
 
   const isFinished = totalQuestions > 0 && answeredCount === totalQuestions;
 
