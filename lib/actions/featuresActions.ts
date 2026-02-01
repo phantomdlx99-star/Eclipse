@@ -4,6 +4,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { connectToDB } from "../mongodb";
 import { QuizResult } from "../model/quizResult";
 import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
 const genAi = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
@@ -12,6 +13,10 @@ const generateQuiz = async (
   classId: string,
   subjectId: string,
 ) => {
+  const history = await getQuizHistory();
+  console.log(history);
+  if (history.length > 5) redirect("/");
+
   const model = genAi.getGenerativeModel({
     model: "gemini-2.5-flash",
     generationConfig: { responseMimeType: "application/json" },
@@ -41,6 +46,7 @@ export async function saveQuizResult(data: any) {
   if (!userId) throw new Error("Unauthorized");
 
   await connectToDB();
+
   const newResult = await QuizResult.create({
     clerkId: userId,
     ...data,
