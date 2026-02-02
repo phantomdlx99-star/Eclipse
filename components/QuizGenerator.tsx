@@ -5,10 +5,21 @@ import { useEffect, useRef, useState } from "react";
 import { saveQuizResult } from "@/lib/actions/featuresActions";
 import { toast } from "sonner";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import "katex/dist/katex.min.css"; // Import the math styles
+import Remarked from "./Remarked";
+
+type Quiz = {
+  question: string;
+  options: string[];
+  answer: string;
+};
 
 export default function QuizGenerator({ classId, subjectId, chapterId }: any) {
   const [loading, setLoading] = useState(false);
-  const [quiz, setQuiz] = useState<any[] | null>(null);
+  const [quiz, setQuiz] = useState<Quiz[] | null>(null);
   const [selectedAnswers, setSelectedAnswers] = useState<
     Record<number, string>
   >({});
@@ -16,8 +27,14 @@ export default function QuizGenerator({ classId, subjectId, chapterId }: any) {
   const handleGenerate = async () => {
     setLoading(true);
     try {
-      const quiz = await generateQuiz(chapterId, classId, subjectId);
-      setQuiz(quiz);
+      const data = await generateQuiz(chapterId, classId, subjectId);
+
+      // Error Handling: Use a guard to check if the response is an error
+      if (data && "error" in data) {
+        toast.error(data.error);
+      } else {
+        setQuiz(data); // This now works without errors!
+      }
     } catch (error) {
       console.error("Error generating quiz:", error);
     } finally {
@@ -110,15 +127,19 @@ export default function QuizGenerator({ classId, subjectId, chapterId }: any) {
           </div>
         ) : (
           <div className="space-y-6">
-            {quiz.map((q, qIdx) => (
+            {quiz?.map((q: any, qIdx) => (
               <div
                 key={qIdx}
                 className="glass-nav p-6 rounded-2xl border border-white/10"
               >
-                <p className="text-xl mb-4 font-display">
-                  Q{qIdx + 1}: {q.question}
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex justify-start gap-2">
+                  <h1 className="text-xl font-display text-white font-semibold">
+                    {qIdx + 1}.
+                  </h1>
+                  <Remarked text={q.question} />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5">
                   {q.options.map((opt: string) => {
                     const isSelected = selectedAnswers[qIdx] === opt;
                     const isCorrect = opt === q.answer;
@@ -139,7 +160,12 @@ export default function QuizGenerator({ classId, subjectId, chapterId }: any) {
                         disabled={hasAnswered}
                         className={`text-left p-4 rounded-xl border border-white/5 transition-all font-display ${bgColor} ${!hasAnswered && "hover:bg-primary/20 hover:border-primary/50 font-display cursor-pointer text-lg"}`}
                       >
-                        {opt}
+                        <ReactMarkdown
+                          remarkPlugins={[remarkMath]}
+                          rehypePlugins={[rehypeKatex]}
+                        >
+                          {opt}
+                        </ReactMarkdown>
                       </button>
                     );
                   })}

@@ -1,12 +1,34 @@
 "use server";
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
+
+import { google } from "@ai-sdk/google";
+import { groq } from "@ai-sdk/groq";
+import { generateObject } from "ai";
+import { z } from "zod";
 import { connectToDB } from "../mongodb";
 import { QuizResult } from "../model/quizResult";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-
-const genAi = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+/**
+ * Helper to handle retries with exponential backoff
+ */
+async function withRetry<T>(
+  fn: () => Promise<T>,
+  retries = 3,
+  delay = 2000,
+): Promise<T> {
+  try {
+    return await fn();
+  } catch (error: any) {
+    if (error.status === 429 && retries > 0) {
+      console.warn(`Rate limited. Retrying in ${delay}ms...`);
+      await new Promise((resolve) => setTimeout(resolve, delay));
+      return withRetry(fn, retries - 1, delay * 2);
+    }
+    throw error;
+  }
+}
 
 const generateQuiz = async (
   topic: string,
@@ -14,28 +36,47 @@ const generateQuiz = async (
   subjectId: string,
 ) => {
   const history = await getQuizHistory();
-  console.log(history);
   if (history.length > 12) redirect("/");
 
-  const model = genAi.getGenerativeModel({
-    model: "gemini-2.5-flash-lite",
-    generationConfig: { responseMimeType: "application/json" },
-  });
+  // Define the schema once to ensure both providers return identical JSON
+  const quizSchema = z.array(
+    z.object({
+      question: z.string(),
+      options: z.array(z.string()).length(4),
+      answer: z.string(), // Must be the correct text from the options array
+    }),
+  );
 
-  const prompt = `Generate a quiz about for ${classId} ${subjectId} ${topic}. 
-    Return a JSON array of 5 objects. Each object must have:
-    - "question": the question text
-    - "options": an array of 4 possible answers
-    - "answer": the correct answer from the options array
-  `;
+  const prompt = `Generate a quiz for ${classId} ${subjectId} ${topic}. 
+    Return a JSON array of 15 objects. Each object must have a "question", 
+    an array of 4 "options", and the correct "answer" string.`;
 
   try {
-    const result = await model.generateContent(prompt);
-    const responseText = result.response.text();
-    return JSON.parse(responseText);
-  } catch (error) {
-    console.error("Error generating quiz:", error);
-    return { error: "Failed to generate quiz." };
+    // Attempt 1: Gemini with Exponential Backoff
+    const result = await withRetry(() =>
+      generateObject({
+        model: google("gemini-2.5-flash-lite"),
+        schema: quizSchema,
+        prompt: prompt,
+      }),
+    );
+    return result.object;
+  } catch (error: any) {
+    console.error("Gemini failed, switching to Groq:", error.message);
+
+    try {
+      // Attempt 2: Fallback to Groq (Llama 3.3)
+      // Groq has much higher free limits (up to 14,400 Requests Per Day)
+      const fallbackResult = await generateObject({
+        model: groq("llama-3.3-70b-versatile"),
+        schema: quizSchema,
+        prompt: prompt,
+      });
+      return fallbackResult.object;
+    } catch (fallbackError: any) {
+      console.error("All providers failed:", fallbackError);
+      return { error: "Failed to generate quiz after multiple attempts." };
+    }
   }
 };
 

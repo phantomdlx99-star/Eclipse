@@ -1,0 +1,15 @@
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import ReactMarkdown from "react-markdown";
+
+const Remarked = ({ text }: { text: string }) => {
+  return (
+    <div className="text-xl font-display text-white font-semibold">
+      <ReactMarkdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>
+        {text}
+      </ReactMarkdown>
+    </div>
+  );
+};
+
+export default Remarked;

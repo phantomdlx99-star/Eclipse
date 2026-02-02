@@ -67,7 +67,7 @@ const PrevQuiz = ({ quizData }: { quizData: any }) => {
               <h2 className="text-xl">Right Answers {correct.length}</h2>
             </div>
             <div className="text-3xl font-bold text-transparent bg-clip-text bg-linear-to-tr from-yellow-500 to-white text-center">
-              {correct.length >= 3 ? "Nice!" : "Keep Going!"}
+              {correct.length >= 7 ? "Nice!" : "Keep Going!"}
             </div>
           </div>
         </Card>
