@@ -18,7 +18,7 @@ const generateQuiz = async (
   if (history.length > 12) redirect("/");
 
   const model = genAi.getGenerativeModel({
-    model: "gemini-2.5-flash",
+    model: "gemini-2.5-flash-lite",
     generationConfig: { responseMimeType: "application/json" },
   });
 
