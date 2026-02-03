@@ -48,7 +48,7 @@ const generateQuiz = async (
   );
 
   const prompt = `Generate a quiz for ${classId} ${subjectId} ${topic}. 
-    Return a JSON array of 15 objects. Each object must have a "question", 
+    Return a JSON array of 5 objects. Each object must have a "question", 
     an array of 4 "options", and the correct "answer" string.`;
 
   try {
@@ -68,7 +68,7 @@ const generateQuiz = async (
       // Attempt 2: Fallback to Groq (Llama 3.3)
       // Groq has much higher free limits (up to 14,400 Requests Per Day)
       const fallbackResult = await generateObject({
-        model: groq("llama-3.3-70b-versatile"),
+        model: groq("llama-3.1-70b-versatile"),
         schema: quizSchema,
         prompt: prompt,
       });

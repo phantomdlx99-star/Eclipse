@@ -33,7 +33,7 @@ export default function QuizGenerator({ classId, subjectId, chapterId }: any) {
       if (data && "error" in data) {
         toast.error(data.error);
       } else {
-        setQuiz(data); // This now works without errors!
+        setQuiz(data);
       }
     } catch (error) {
       console.error("Error generating quiz:", error);
