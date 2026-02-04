@@ -1,9 +1,6 @@
 "use server";
 
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
 import { google } from "@ai-sdk/google";
-import { groq } from "@ai-sdk/groq";
 import Groq from "groq-sdk";
 import { generateObject } from "ai";
 import { z } from "zod";
@@ -11,9 +8,7 @@ import { connectToDB } from "../mongodb";
 import { QuizResult } from "../model/quizResult";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-/**
- * Helper to handle retries with exponential backoff
- */
+
 async function withRetry<T>(
   fn: () => Promise<T>,
   retries = 3,
@@ -48,10 +43,12 @@ const generateQuiz = async (
       answer: z.string(), // Must be the correct text from the options array
     }),
   );
-
   const prompt = `Generate a quiz for ${classId} ${subjectId} ${topic}. 
-    Return a JSON array of ${value} objects in Gujarati Language. Use English wherever its needed to generate the quiz. Each object must have a "question", 
-    an array of 4 "options", and the correct "answer" string. Always return mathematical formulas, variables, and scientific notation wrapped in LaTeX dollar signs, e.g., $u^2$ or $\sin(2\theta)$.`;
+Return a JSON array of ${value} objects.
+CRITICAL: All math/variables must be wrapped in single dollar signs.
+IMPORTANT: Use DOUBLE BACKSLASHES for all LaTeX commands. 
+Example: Write \\\\frac{a}{b} (not \\frac) and \\\\theta (not \\theta).
+This is necessary so the backslashes survive JSON parsing.`;
 
   try {
     // Attempt 1: Gemini with Exponential Backoff
@@ -70,19 +67,36 @@ const generateQuiz = async (
 
     try {
       const completion = await groq.chat.completions.create({
-        model: "llama-3.3-70b-versatile",
+        model: "openai/gpt-oss-120b",
         messages: [
           {
             role: "system",
-            content: `You are a quiz generator. 
-        Return ONLY a JSON object. 
-        All math formulas MUST be wrapped in single dollar signs (e.g., $E=mc^2$). 
-        Do NOT repeat formulas in plain text.
-        Structure: { "quizzes": [{ "question": "string", "options": ["string"], "answer": "string" }] }`,
+            content: `You are a professional physics and science educator. 
+Your goal is to generate high-quality, accurate multiple-choice questions.
+
+CRITICAL FORMATTING RULES:
+1. Return ONLY a valid JSON object.
+2. All mathematical formulas, variables, and units MUST be wrapped in single dollar signs (e.g., $u^2$).
+3. You MUST use DOUBLE BACKSLASHES for all LaTeX commands so they survive JSON parsing.
+   - WRONG: \text{kg} or \frac{1}{2}
+   - RIGHT: \\text{kg} or \\frac{1}{2}
+4. DO NOT provide a plain-text fallback or repeat the formula outside of the dollar signs.
+5. Language: Provide the question and options in Gujarati. Use English terms in parentheses if they are common technical terms.
+
+JSON STRUCTURE:
+{
+  "quizzes": [
+    {
+      "question": "Question text here with math like $v = u + at$",
+      "options": ["Option A", "Option B", "Option C", "Option D"],
+      "answer": "The exact text of the correct option"
+    }
+  ]
+}`,
           },
           {
             role: "user",
-            content: prompt,
+            content: `Generate a ${value}-question quiz for Class ${classId}, Subject: ${subjectId}, on the topic of "${topic}". Ensure questions are conceptually accurate and follow the formatting rules provided.`,
           },
         ],
         // Force Groq to return a JSON structure
