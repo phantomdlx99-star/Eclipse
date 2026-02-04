@@ -34,6 +34,7 @@ const generateQuiz = async (
   topic: string,
   classId: string,
   subjectId: string,
+  value: string,
 ) => {
   const history = await getQuizHistory();
   if (history.length > 12) redirect("/");
@@ -48,8 +49,8 @@ const generateQuiz = async (
   );
 
   const prompt = `Generate a quiz for ${classId} ${subjectId} ${topic}. 
-    Return a JSON array of 5 objects. Each object must have a "question", 
-    an array of 4 "options", and the correct "answer" string.`;
+    Return a JSON array of ${value} objects in Gujarati Language. Use English wherever its needed to generate the quiz. Each object must have a "question", 
+    an array of 4 "options", and the correct "answer" string. Always return mathematical formulas, variables, and scientific notation wrapped in LaTeX dollar signs, e.g., $u^2$ or $\sin(2\theta)$.`;
 
   try {
     // Attempt 1: Gemini with Exponential Backoff
@@ -65,14 +66,23 @@ const generateQuiz = async (
     console.error("Gemini failed, switching to Groq:", error.message);
 
     try {
-      // Attempt 2: Fallback to Groq (Llama 3.3)
-      // Groq has much higher free limits (up to 14,400 Requests Per Day)
-      const fallbackResult = await generateObject({
-        model: groq("llama-3.1-70b-versatile"),
-        schema: quizSchema,
+      const { object } = await generateObject({
+        model: groq("llama-3.3-70b-versatile"), // Or your preferred Groq model
+        schema: z.object({
+          quizzes: z.array(
+            z.object({
+              question: z.string(),
+              options: z.array(z.string()).length(4),
+              answer: z
+                .string()
+                .describe("The exact text of the correct option"),
+            }),
+          ),
+        }),
         prompt: prompt,
       });
-      return fallbackResult.object;
+
+      return object.quizzes;
     } catch (fallbackError: any) {
       console.error("All providers failed:", fallbackError);
       return { error: "Failed to generate quiz after multiple attempts." };

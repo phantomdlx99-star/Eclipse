@@ -15,8 +15,7 @@ const page = async ({
   }>;
 }) => {
   const { classId, subjectId, chapterId, feature } = await params;
-  const quiz = await generateQuiz(chapterId, classId, subjectId);
-  console.log(quiz);
+
   switch (feature) {
     case "quiz-generator":
       return (

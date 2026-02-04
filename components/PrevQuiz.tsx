@@ -1,5 +1,6 @@
 import { CheckCircle } from "lucide-react";
 import { Card } from "./ui/card";
+import Remarked from "./Remarked";
 
 const PrevQuiz = ({ quizData }: { quizData: any }) => {
   const {
@@ -35,15 +36,16 @@ const PrevQuiz = ({ quizData }: { quizData: any }) => {
             className="px-5 py-4 w-full h-auto border-3 border-primary rounded-2xl before:content-[''] before:absolute before:-top-5 before:-right-5 before:rounded-full before:w-20 before:h-20 relative before:bg-primary overflow-hidden z-5 before:-z-1 pr-10"
             key={crypto.randomUUID()}
           >
-            <h1 className="text-xl font-bold text-white font-display">
-              {idx + 1}. {item.question}
-            </h1>
-            <h2 className="text-lg font-semibold ml-6 mt-2">
-              You Selected: {item.selected}
-            </h2>
-            <h2 className="text-lg font-semibold ml-6 mt-2">
-              Correct: {item.correct}
-            </h2>
+            <div className="text-xl font-bold text-white font-display flex gap-3 justify-start">
+              {idx + 1}. <Remarked text={item.question} />
+            </div>
+            <div className="text-lg font-semibold ml-6 mt-2 flex justify-start gap-2">
+              You Selected:
+              <Remarked text={item.selected} />
+            </div>
+            <div className="text-lg font-semibold ml-6 mt-2 flex justify-start gap-2">
+              Correct: <Remarked text={item.correct} />
+            </div>
           </div>
         )) ?? (
           <div>

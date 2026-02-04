@@ -1,7 +1,7 @@
 // components/QuizGenerator.tsx
 "use client";
 import generateQuiz, { getQuizHistory } from "@/lib/actions/featuresActions";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { saveQuizResult } from "@/lib/actions/featuresActions";
 import { toast } from "sonner";
 import Link from "next/link";
@@ -10,6 +10,15 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css"; // Import the math styles
 import Remarked from "./Remarked";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type Quiz = {
   question: string;
@@ -23,11 +32,12 @@ export default function QuizGenerator({ classId, subjectId, chapterId }: any) {
   const [selectedAnswers, setSelectedAnswers] = useState<
     Record<number, string>
   >({});
+  const [value, setValue] = useState("5");
 
   const handleGenerate = async () => {
     setLoading(true);
     try {
-      const data = await generateQuiz(chapterId, classId, subjectId);
+      const data = await generateQuiz(chapterId, classId, subjectId, value);
 
       // Error Handling: Use a guard to check if the response is an error
       if (data && "error" in data) {
@@ -97,13 +107,26 @@ export default function QuizGenerator({ classId, subjectId, chapterId }: any) {
   return (
     <div className="min-h-screen p-8 text-white">
       <div className="max-w-4xl mx-auto">
-        <header className="mb-10 text-center">
+        <header className="mb-10 text-center flex flex-col px-5 py-3 rounded-xl justify-center items-center gap-5 w-full h-auto border-2 border-primary">
           <h1 className="text-4xl font-bold gradient-text mb-2">
             AI Quiz Generator
           </h1>
           <p className="text-gray-400">
             Generating custom questions for {subjectId} - {chapterId}
           </p>
+          <Select value={value} onValueChange={setValue}>
+            <SelectTrigger className="w-full max-w-48">
+              <SelectValue placeholder="Select a fruit" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Select Number of Quiz generation</SelectLabel>
+                <SelectItem value="5">5</SelectItem>
+                <SelectItem value="10">10</SelectItem>
+                <SelectItem value="15">15</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </header>
         {!quiz ? (
           <div className="glass-nav p-10 rounded-3xl border border-white/10 text-center animate-float">
@@ -160,12 +183,7 @@ export default function QuizGenerator({ classId, subjectId, chapterId }: any) {
                         disabled={hasAnswered}
                         className={`text-left p-4 rounded-xl border border-white/5 transition-all font-display ${bgColor} ${!hasAnswered && "hover:bg-primary/20 hover:border-primary/50 font-display cursor-pointer text-lg"}`}
                       >
-                        <ReactMarkdown
-                          remarkPlugins={[remarkMath]}
-                          rehypePlugins={[rehypeKatex]}
-                        >
-                          {opt}
-                        </ReactMarkdown>
+                        <Remarked text={opt} />
                       </button>
                     );
                   })}
