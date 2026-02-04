@@ -1,6 +1,7 @@
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import ReactMarkdown from "react-markdown";
+import "katex/dist/katex.min.css";
 
 const Remarked = ({ text }: { text: string }) => {
   return (
