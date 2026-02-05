@@ -26,7 +26,7 @@ const Navbar = () => {
   return (
     <nav
       className={`fixed w-full z-50 border-b border-white/10 transition-all duration-300 ${
-        isScrolled ? "glass-nav shadow-lg py-1" : "bg-transparent  py-4"
+        isScrolled ? "glass-nav shadow-shadow py-1" : "bg-transparent  py-4"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -41,13 +41,13 @@ const Navbar = () => {
           >
             <div className="shrink-0 flex items-center gap-2 cursor-pointer group">
               <div className="relative w-8 h-8 flex items-center justify-center">
-                <div className="absolute inset-0 rounded-full bg-[#F59E0B] blur-md opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                <div className="absolute inset-0 rounded-full bg-primary blur-md opacity-20 group-hover:opacity-40 transition-opacity"></div>
                 <Circle
                   className="w-8 h-8 text-[#0B0F19] fill-[#0B0F19] absolute z-10"
                   strokeWidth={1.5}
                 />
-                <div className="w-8 h-8 rounded-full border-2 border-[#F59E0B] absolute z-0"></div>
-                <div className="w-full h-full rounded-full bg-[#0B0F19] absolute top-0 left-1"></div>
+                <div className="w-8 h-8 rounded-full border-2 border-primary absolute z-0"></div>
+                <div className="w-full h-full rounded-full bg-background absolute top-0 left-1"></div>
               </div>
               <span className="font-display font-bold text-2xl tracking-tight text-white">
                 Eclipse
@@ -67,7 +67,7 @@ const Navbar = () => {
                   key={item}
                   spy={true}
                   href={`#${item.toLowerCase()}`}
-                  className="hover:text-[#F59E0B] transition-colors px-3 py-2 rounded-md text-sm font-medium"
+                  className="hover:text-primary transition-colors px-3 py-2 rounded-md text-sm font-medium"
                 >
                   {item}
                 </ScrollLink>
@@ -87,7 +87,7 @@ const Navbar = () => {
               </Link>
             )}
             <Link href={"/learn"}>
-              <button className="bg-[#F59E0B] hover:bg-amber-400 text-[#0B0F19] px-5 py-2.5 rounded-full font-bold text-sm transition-all transform hover:scale-105 shadow-[0_0_15px_rgba(245,158,11,0.3)]">
+              <button className="bg-primary hover:bg-primary text-[#0B0F19] px-5 py-2.5 rounded-full font-bold text-sm transition-all transform hover:scale-105 shadow-shadow[0_0_15px_rgba(245,158,11,0.3)]">
                 Get Started
               </button>
             </Link>
@@ -120,7 +120,7 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden bg-[#0B0F19] border-b border-white/10 absolute w-full">
+        <div className="md:hidden bg-background border-b border-white/10 absolute w-full">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             {["Features", "Courses", "Mentors"].map((item) => (
               <a

@@ -181,7 +181,7 @@ export default function QuizGenerator({ classId, subjectId, chapterId }: any) {
                         key={opt}
                         onClick={() => handleSelect(qIdx, opt)}
                         disabled={hasAnswered}
-                        className={`text-left p-4 rounded-xl border border-white/5 transition-all font-display ${bgColor} ${!hasAnswered && "hover:bg-primary/20 hover:border-primary/50 font-display cursor-pointer text-lg"}`}
+                        className={`text-left p-4 rounded-xl border border-border transition-all font-display ${bgColor} ${!hasAnswered && "hover:bg-primary/20 hover:border-primary/50 font-display cursor-pointer text-lg"}`}
                       >
                         <Remarked text={opt} />
                       </button>

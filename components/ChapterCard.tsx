@@ -27,7 +27,7 @@ const ChapterCard = ({
 
   return (
     // Added 'flex' to the outer wrapper to ensure cards in a row have equal height
-    <div className="flex w-full h-full p-5 border-2 border-yellow-300 rounded-lg relative overflow-hidden before:absolute before:content[''] before:bg-yellow-400 before:top-0 before:-right-3.75 before:w-20 before:h-20 before:rounded-xl before:z-[-1]">
+    <div className="flex w-full h-full p-5 border-2 border-border rounded-lg relative overflow-hidden before:absolute before:content[''] before:bg-primary before:top-0 before:-right-3.75 before:w-20 before:h-20 before:rounded-xl before:z-[-1]">
       <Card className="h-full w-full flex flex-row items-stretch px-5 gap-3 z-10 bg-transparent backdrop-blur-md border-2 border-gray-600">
         <div className="flex items-center">
           <Image

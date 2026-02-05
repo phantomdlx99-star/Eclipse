@@ -21,7 +21,7 @@ const AiFeatures = ({
   const router = useRouter();
 
   return (
-    <div className="flex flex-col justify-evenly items-center p-6 rounded-2xl bg-linear-to-br from-gray-900/50 to-gray-800/30 border border-amber-500/20 hover:border-amber-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/10 gap-5">
+    <div className="flex flex-col justify-evenly items-center p-6 rounded-2xl bg-linear-to-br from-gray-900/50 to-gray-800/30 border border-primary/20 hover:border-primary/40 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/10 gap-5">
       <div className="w-full max-w-37.5 aspect-square mb-6 flex items-center justify-center">
         <Image
           src={image}

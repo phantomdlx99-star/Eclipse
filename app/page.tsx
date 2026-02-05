@@ -45,40 +45,8 @@ export default function EclipseLanding() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0B0F19] text-gray-100 font-sans selection:bg-[#F59E0B] selection:text-[#0B0F19] overflow-x-hidden">
+    <div className="min-h-screen bg-background text-gray-100 font-sans selection:bg-primary selection:text-[#0B0F19] overflow-x-hidden">
       {/* Custom Styles for specific animations and scrollbars */}
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Space+Grotesk:wght@500;700&display=swap');
-        
-        .font-display { font-family: 'Space Grotesk', sans-serif; }
-        
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #111827; }
-        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #4B5563; }
-        
-        .glass-nav {
-          background: rgba(11, 15, 25, 0.8);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-        }
-        
-        .gradient-text {
-          background: linear-gradient(135deg, #F59E0B 0%, #FCD34D 50%, #FFFFFF 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
-
-        .hero-glow {
-          background: radial-gradient(circle at center, rgba(129, 140, 248, 0.15) 0%, rgba(11, 15, 25, 0) 70%);
-        }
-
-        @keyframes float {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-20px); }
-        }
-        .animate-float { animation: float 6s ease-in-out infinite; }
-      `}</style>
 
       {/* Navigation */}
       <Navbar />
@@ -86,12 +54,12 @@ export default function EclipseLanding() {
       <Element name="home">
         <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full z-0 hero-glow pointer-events-none"></div>
-          <div className="absolute top-20 right-0 w-96 h-96 bg-indigo-900/30 rounded-full blur-3xl -z-10 animate-pulse"></div>
-          <div className="absolute bottom-0 left-0 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl -z-10"></div>
+          <div className="absolute top-20 right-0 w-96 h-96 bg-primary/20 rounded-full blur-3xl -z-10 animate-pulse"></div>
+          <div className="absolute bottom-0 left-0 w-72 h-72 bg-primary/10 rounded-full blur-3xl -z-10"></div>
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center animate-on-scroll opacity-0 translate-y-10 transition-all duration-700">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8 backdrop-blur-sm">
-              <span className="w-2 h-2 rounded-full bg-[#F59E0B] animate-pulse"></span>
+              <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
               <span className="text-sm font-medium text-gray-300">
                 New: AI-Powered Learning Paths
               </span>
@@ -108,7 +76,7 @@ export default function EclipseLanding() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Link href={"/learn"}>
-                <button className="w-full sm:w-auto px-8 py-4 bg-[#F59E0B] hover:bg-amber-400 text-[#0B0F19] font-bold rounded-full text-lg transition-all transform hover:-translate-y-1 shadow-[0_0_20px_rgba(245,158,11,0.4)] flex items-center justify-center gap-2">
+                <button className="w-full sm:w-auto px-8 py-4 bg-primary hover:bg-primary text-[#0B0F19] font-bold rounded-full text-lg transition-all transform hover:-translate-y-1 shadow-shadowshadowshadowshadow flex items-center justify-center gap-2">
                   Start Learning Now
                   <ArrowRight size={20} fontWeight="bold" />
                 </button>
@@ -142,7 +110,7 @@ export default function EclipseLanding() {
       </Element>
 
       {/* Trusted By */}
-      <section className="py-10 border-y border-white/5 bg-black/20">
+      <section className="py-10 border-y border-border bg-black/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center animate-on-scroll opacity-0 translate-y-10 transition-all duration-700">
           <p className="text-sm font-semibold text-gray-500 uppercase tracking-widest mb-6">
             Trusted by teams at
@@ -201,9 +169,9 @@ export default function EclipseLanding() {
               ].map((feature, idx) => (
                 <div
                   key={idx}
-                  className="p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-[#F59E0B]/50 transition-all duration-300 hover:-translate-y-2 group animate-on-scroll opacity-0 translate-y-10 delay-100"
+                  className="p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-primary/50 transition-all duration-300 hover:-translate-y-2 group animate-on-scroll opacity-0 translate-y-10 delay-100"
                 >
-                  <div className="w-14 h-14 rounded-xl bg-[#F59E0B]/10 flex items-center justify-center mb-6 group-hover:bg-[#F59E0B] group-hover:text-[#0B0F19] transition-colors text-[#F59E0B]">
+                  <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-[#0B0F19] transition-colors text-primary">
                     <feature.icon size={32} fontWeight="fill" />
                   </div>
                   <h3 className="text-xl font-bold text-white mb-3">
@@ -232,7 +200,7 @@ export default function EclipseLanding() {
                   Join thousands of students in our most popular tracks.
                 </p>
               </div>
-              <button className="text-[#F59E0B] hover:text-white font-medium flex items-center gap-2 transition-colors">
+              <button className="text-primary hover:text-white font-medium flex items-center gap-2 transition-colors">
                 View All Courses <ArrowRight size={16} fontWeight="bold" />
               </button>
             </div>
@@ -278,7 +246,7 @@ export default function EclipseLanding() {
               ].map((course, idx) => (
                 <div
                   key={idx}
-                  className="bg-[#111827] rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-[#F59E0B]/10 transition-all duration-300 group cursor-pointer border border-white/5 animate-on-scroll opacity-0 translate-y-10 delay-150"
+                  className="bg-card rounded-xl overflow-hidden hover:shadow-shadowshadow2xl hover:shadow-shadowshadow[#F59E0B]/10 transition-all duration-300 group cursor-pointer border border-border animate-on-scroll opacity-0 translate-y-10 delay-150"
                 >
                   <div
                     className={`h-48 bg-linear-to-br ${course.color} relative overflow-hidden`}
@@ -293,11 +261,11 @@ export default function EclipseLanding() {
                       <Star
                         size={16}
                         fontWeight="fill"
-                        className="text-[#F59E0B]"
+                        className="text-primary"
                       />{" "}
                       {course.rating}
                     </div>
-                    <h3 className="text-lg font-bold text-white mb-2 group-hover:text-[#F59E0B] transition-colors">
+                    <h3 className="text-lg font-bold text-white mb-2 group-hover:text-primary transition-colors">
                       {course.title}
                     </h3>
                     <p className="text-sm text-gray-500 mb-4">
@@ -307,7 +275,7 @@ export default function EclipseLanding() {
                       <span className="text-white font-bold">
                         {course.price}
                       </span>
-                      <button className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#F59E0B] hover:text-[#0B0F19] transition-colors">
+                      <button className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary hover:text-[#0B0F19] transition-colors">
                         <Plus size={16} fontWeight={"bold"} />
                       </button>
                     </div>
@@ -361,12 +329,12 @@ export default function EclipseLanding() {
 
             <div className="md:w-1/2 mt-10 md:mt-0 relative">
               {/* Abstract Phone Representation */}
-              <div className="relative mx-auto border-gray-800 bg-gray-800 border-14 rounded-[2.5rem] h-100 w-55 shadow-xl animate-float">
+              <div className="relative mx-auto border-gray-800 bg-gray-800 border-14 rounded-[2.5rem] h-100 w-55 shadow-shadowshadowxl animate-float">
                 <div className="h-8 w-0.75 bg-gray-800 absolute -left-4.25 top-18 rounded-l-lg"></div>
                 <div className="h-11.5 w-0.75 bg-gray-800 absolute -left-4.25 top-31 rounded-l-lg"></div>
                 <div className="h-11.5 w-0.75 bg-gray-800 absolute -left-4.25 top-44.5 rounded-l-lg"></div>
                 <div className="h-16 w-0.75 bg-gray-800 absolute -right-4.25 top-35.5 rounded-r-lg"></div>
-                <div className="rounded-4xl overflow-hidden w-full h-full bg-[#0B0F19] relative">
+                <div className="rounded-4xl overflow-hidden w-full h-full bg-background relative">
                   {/* Screen Content */}
                   <div className="p-4 space-y-4">
                     <div className="flex justify-between items-center text-white/50 text-xs">
@@ -376,7 +344,7 @@ export default function EclipseLanding() {
                         <path d="M12,21L15.6,16.2C14.6,15.45 13.35,15 12,15C10.65,15 9.4,15.45 8.4,16.2L12,21M12,3C7.95,3 4.21,4.34 1.2,6.6L3,9C5.5,7.12 8.62,6 12,6C15.38,6 18.5,7.12 21,9L22.8,6.6C19.79,4.34 16.05,3 12,3M12,9C9.3,9 6.81,9.89 4.8,11.4L6.6,13.8C8.1,12.67 9.97,12 12,12C14.03,12 15.9,12.67 17.4,13.8L19.2,11.4C17.19,9.89 14.7,9 12,9Z" />
                       </svg>
                     </div>
-                    <div className="h-32 bg-[#F59E0B] rounded-xl flex items-end p-3 relative overflow-hidden">
+                    <div className="h-32 bg-primary rounded-xl flex items-end p-3 relative overflow-hidden">
                       <div className="absolute top-0 right-0 w-16 h-16 bg-white/20 rounded-full -mr-4 -mt-4"></div>
                       <span className="text-[#0B0F19] font-bold text-lg relative z-10">
                         Continue
@@ -395,19 +363,19 @@ export default function EclipseLanding() {
             </div>
 
             {/* Background decor */}
-            <div className="absolute right-0 top-0 w-96 h-96 bg-[#F59E0B]/20 blur-[100px] z-0"></div>
+            <div className="absolute right-0 top-0 w-96 h-96 bg-primary/20 blur-[100px] z-0"></div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/10 bg-[#0B0F19] pt-16 pb-8">
+      <footer className="border-t border-white/10 bg-background pt-16 pb-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
             <div className="col-span-2 md:col-span-1">
               <div className="flex items-center gap-2 mb-4">
                 <Circle
-                  className="text-[#F59E0B]"
+                  className="text-primary"
                   size={24}
                   fill="currentColor"
                 />
@@ -433,7 +401,7 @@ export default function EclipseLanding() {
                   <li key={item}>
                     <a
                       href="#"
-                      className="hover:text-[#F59E0B] transition-colors"
+                      className="hover:text-primary transition-colors"
                     >
                       {item}
                     </a>
@@ -449,7 +417,7 @@ export default function EclipseLanding() {
                   <li key={item}>
                     <a
                       href="#"
-                      className="hover:text-[#F59E0B] transition-colors"
+                      className="hover:text-primary transition-colors"
                     >
                       {item}
                     </a>
@@ -466,7 +434,7 @@ export default function EclipseLanding() {
                     <li key={item}>
                       <a
                         href="#"
-                        className="hover:text-[#F59E0B] transition-colors"
+                        className="hover:text-primary transition-colors"
                       >
                         {item}
                       </a>
@@ -477,7 +445,7 @@ export default function EclipseLanding() {
             </div>
           </div>
 
-          <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-600 text-sm">
               © 2024 Eclipse Learning Inc. All rights reserved.
             </p>
