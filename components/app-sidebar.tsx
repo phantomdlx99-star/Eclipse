@@ -14,7 +14,7 @@ import Link from "next/link";
 
 export function AppSidebar({ history }: { history: any[] }) {
   return (
-    <Sidebar variant="inset">
+    <Sidebar variant="inset" className="digital-surface">
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="text-center font-bold text-3xl font-display text-transparent bg-clip-text bg-linear-to-r from-primary to-white mb-10 relative after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-gray-400 after:left-1 after:right-7 after:-bottom-5 after:rounded-full">

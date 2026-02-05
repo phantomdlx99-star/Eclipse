@@ -41,7 +41,7 @@ export default function RootLayout({
     >
       <html lang="en" className="dark">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased ubuntu-medium selection:bg-yellow-400`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased ubuntu-medium selection:bg-yellow-400 focus-glow`}
         >
           <main>{children}</main>
           <Toaster />

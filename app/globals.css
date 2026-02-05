@@ -20,19 +20,16 @@
   font-weight: 500;
   font-style: normal;
 }
-
-::-webkit-scrollbar {
-  width: 8px;
-}
 ::-webkit-scrollbar-track {
-  background: #111827;
+  background: #0f0f1a; /* Matches background */
 }
 ::-webkit-scrollbar-thumb {
-  background: #374151;
-  border-radius: 4px;
+  background: #2d2b55; /* Secondary purple */
+  border-radius: 10px;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: #4b5563;
+
+.focus-glow {
+  text-shadow: 0 0 5px rgba(164, 143, 255, 0.4);
 }
 
 .glass-nav {
@@ -54,6 +51,11 @@
     rgba(129, 140, 248, 0.15) 0%,
     rgba(11, 15, 25, 0) 70%
   );
+}
+.digital-surface {
+  background: rgba(22, 22, 42, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(164, 143, 255, 0.1);
 }
 
 @keyframes float {
