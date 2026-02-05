@@ -32,26 +32,27 @@ const generateQuiz = async (
   subjectId: string,
   value: string,
 ) => {
+  const { has, userId } = await auth();
   const history = await getQuizHistory();
-  if (history.length > 12) redirect("/");
 
-  // Define the schema once to ensure both providers return identical JSON
+  const isPro = has({ plan: "pro_version" });
+  if (!isPro && history.length >= 6) redirect("/limit");
+
   const quizSchema = z.array(
     z.object({
       question: z.string(),
       options: z.array(z.string()).length(4),
-      answer: z.string(), // Must be the correct text from the options array
+      answer: z.string(),
     }),
   );
   const prompt = `Generate a quiz for ${classId} ${subjectId} ${topic}. 
-Return a JSON array of ${value} objects.
+Return a JSON array of ${value} objects in Gujarati Language. Use English where needed.
 CRITICAL: All math/variables must be wrapped in single dollar signs.
 IMPORTANT: Use DOUBLE BACKSLASHES for all LaTeX commands. 
 Example: Write \\\\frac{a}{b} (not \\frac) and \\\\theta (not \\theta).
 This is necessary so the backslashes survive JSON parsing.`;
 
   try {
-    // Attempt 1: Gemini with Exponential Backoff
     const result = await withRetry(() =>
       generateObject({
         model: google("gemini-2.5-flash-lite"),
