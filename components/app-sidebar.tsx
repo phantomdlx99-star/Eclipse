@@ -1,4 +1,7 @@
 // components/app-sidebar.tsx
+
+"use client";
+
 import {
   Sidebar,
   SidebarContent,
@@ -11,8 +14,11 @@ import {
 } from "@/components/ui/sidebar";
 import { History } from "lucide-react";
 import Link from "next/link";
+import { useSidebar } from "@/components/ui/sidebar";
 
 export function AppSidebar({ history }: { history: any[] }) {
+  const { setOpenMobile } = useSidebar();
+
   return (
     <Sidebar variant="inset" className="digital-surface">
       <SidebarContent>
@@ -23,7 +29,10 @@ export function AppSidebar({ history }: { history: any[] }) {
           <SidebarGroupContent>
             <SidebarMenu>
               {history.map((item) => (
-                <SidebarMenuItem key={item._id}>
+                <SidebarMenuItem
+                  key={item._id}
+                  onClick={() => setOpenMobile(false)}
+                >
                   <SidebarMenuButton asChild>
                     <Link
                       href={`/quiz-generator/${item._id}`}
