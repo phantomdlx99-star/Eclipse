@@ -1,14 +1,35 @@
-import { streamText } from "ai";
-import { groq } from "@ai-sdk/groq";
+import Groq from "groq-sdk";
+
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY,
+});
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
-  const result = streamText({
-    model: groq("llama-3.3-70b-versatile"),
-    messages,
-    system:
-      "You are a helpful e-learning assistant for Gujarat Students. You should response in Gujarati Language. Use English language where needed. Be accurate at gujarati grammar.",
+
+  // 1. Create the completion with stream: true
+  const stream = await groq.chat.completions.create({
+    model: "llama-3.3-70b-versatile",
+    messages: [
+      {
+        role: "system",
+        content: "You are a helpful assistant responding in Gujarati.",
+      },
+      ...messages,
+    ],
+    stream: true,
   });
 
-  return result.toTextStreamResponse();
+  // 2. Convert the Groq stream into a standard Web ReadableStream
+  const responseStream = new ReadableStream({
+    async start(controller) {
+      for await (const chunk of stream) {
+        const content = chunk.choices[0]?.delta?.content || "";
+        controller.enqueue(new TextEncoder().encode(content));
+      }
+      controller.close();
+    },
+  });
+
+  return new Response(responseStream);
 }

@@ -1,7 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Space+Grotesk:wght@500;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Geom:ital,wght@0,300..900;1,300..900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap");
-
+@import url("https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Space+Grotesk:wght@500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Anek+Gujarati:wght@100..800&display=swap");
 
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -20,6 +21,11 @@
   font-weight: 500;
   font-style: normal;
 }
+
+.anek-gujarati {
+  font-family: "Anek Gujarati", sans-serif;
+}
+
 ::-webkit-scrollbar-track {
   background: #0f0f1a; /* Matches background */
 }
