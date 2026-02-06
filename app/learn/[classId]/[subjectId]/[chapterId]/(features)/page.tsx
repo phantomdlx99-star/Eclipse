@@ -31,6 +31,13 @@ const page = async ({
       image: "/images/study-reminders.svg",
       slug: "study-reminders",
     },
+    {
+      title: "Interactive Flashcards",
+      description:
+        "Master key concepts with AI-generated flashcards and active recall.",
+      image: "/images/flashcards.svg",
+      slug: "flashcards",
+    },
   ];
 
   return (

@@ -115,6 +115,90 @@ JSON STRUCTURE:
 
 export default generateQuiz;
 
+export const generateFlashcards = async (
+  topic: string,
+  classId: string,
+  subjectId: string,
+) => {
+  const { has } = await auth();
+
+  // Optional: Add rate limiting or pro checks here if needed, similar to generateQuiz
+  // const isPro = has({ plan: "pro_version" });
+
+  const flashcardSchema = z.array(
+    z.object({
+      front: z.string(),
+      back: z.array(z.string()),
+    }),
+  );
+
+  const prompt = `Generate 10 flashcards for ${classId} ${subjectId} ${topic}.
+Return a JSON array of objects with "front" (question/concept) and "back" (array of steps for the answer/explanation) in Gujarati Language. Use English where needed.
+CRITICAL: The "back" field MUST be an array of strings, where each string is a logical step or part of the explanation.
+Example: ["Step 1: ...", "Step 2: ...", "Final Answer: ..."]
+CRITICAL: All math/variables must be wrapped in single dollar signs.
+IMPORTANT: Use DOUBLE BACKSLASHES for all LaTeX commands.
+Example: Write \\\\frac{a}{b} (not \\frac) and \\\\theta (not \\theta).
+This is necessary so the backslashes survive JSON parsing.`;
+
+  try {
+    const result = await withRetry(() =>
+      generateObject({
+        model: google("gemini-2.5-flash-lite"),
+        schema: flashcardSchema,
+        prompt: prompt,
+      }),
+    );
+    return result.object;
+  } catch (error: any) {
+    console.error("Gemini failed, switching to Groq:", error.message);
+
+    const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
+    try {
+      const completion = await groq.chat.completions.create({
+        model: "openai/gpt-oss-120b",
+        messages: [
+          {
+            role: "system",
+            content: `You are a professional physics and science educator.
+Your goal is to generate high-quality flashcards for revision.
+
+CRITICAL FORMATTING RULES:
+1. Return ONLY a valid JSON object.
+2. All mathematical formulas, variables, and units MUST be wrapped in single dollar signs (e.g., $u^2$).
+3. You MUST use DOUBLE BACKSLASHES for all LaTeX commands.
+4. Language: Gujarati (with English terms in parentheses).
+
+JSON STRUCTURE:
+{
+  "flashcards": [
+    {
+      "front": "Concept or Question",
+      "back": ["Step 1 explanation", "Step 2 explanation", "Conclusion"]
+    }
+  ]
+}`,
+          },
+          {
+            role: "user",
+            content: `Generate 10 flashcards for Class ${classId}, Subject: ${subjectId}, on the topic of "${topic}". Ensure the "back" is a detailed step-by-step array.`,
+          },
+        ],
+        response_format: { type: "json_object" },
+      });
+
+      const rawJson = JSON.parse(completion.choices[0].message.content || "{}");
+      return rawJson.flashcards;
+    } catch (fallbackError: any) {
+      console.error("All providers failed:", fallbackError);
+      return {
+        error: "Failed to generate flashcards after multiple attempts.",
+      };
+    }
+  }
+};
+
 export async function saveQuizResult(data: any) {
   const { userId } = await auth();
   if (!userId) throw new Error("Unauthorized");
