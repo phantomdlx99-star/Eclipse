@@ -26,7 +26,12 @@ type Quiz = {
   answer: string;
 };
 
-export default function QuizGenerator({ classId, subjectId, chapterId }: any) {
+export default function QuizGenerator({
+  classId,
+  subjectId,
+  chapterId,
+  topic: initialTopic,
+}: any) {
   const [loading, setLoading] = useState(false);
   const [quiz, setQuiz] = useState<Quiz[] | null>(null);
   const [selectedAnswers, setSelectedAnswers] = useState<
@@ -37,7 +42,8 @@ export default function QuizGenerator({ classId, subjectId, chapterId }: any) {
   const handleGenerate = async () => {
     setLoading(true);
     try {
-      const data = await generateQuiz(chapterId, classId, subjectId, value);
+      const topic = initialTopic || chapterId;
+      const data = await generateQuiz(topic, classId, subjectId, value);
 
       // Error Handling: Use a guard to check if the response is an error
       if (data && "error" in data) {

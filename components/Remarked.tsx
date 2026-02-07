@@ -1,26 +1,26 @@
-// Remarked.tsx
-import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
-import ReactMarkdown from "react-markdown";
+"use client";
+
+import React from "react";
 import "katex/dist/katex.min.css";
+import { InlineMath, BlockMath } from "react-katex";
 
 const Remarked = ({ text }: { text: string }) => {
-  // Regex to fix common "broken" LaTeX where backslashes were stripped
-  const fixedText = text
-    .replace(/(?<!\\)text\{/g, "\\text{") // Fixes text{ -> \text{
-    .replace(/(?<!\\)frac\{/g, "\\frac{") // Fixes frac{ -> \frac{
-    .replace(/(?<!\\)sqrt\{/g, "\\sqrt{") // Fixes sqrt{ -> \sqrt{
-    .replace(/(?<!\\)theta/g, "\\theta") // Fixes theta -> \theta
-    .replace(/rac\{/g, "\\frac{") // Catch-all for common 'rac' error
-    .replace(/ext\{/g, "\\text{"); // Catch-all for common 'ext' error
+  // Use your existing regex to clean the Groq AI output
+  let fixed = text
+    .replace(/(?<!\\)frac\{/g, "\\frac{")
+    .replace(/(?<!\\)vec\{/g, "\\vec{");
+  // ... other replaces from your file
 
-  return (
-    <div className="inline-block font-display text-white font-semibold text-xl">
-      <ReactMarkdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>
-        {text}
-      </ReactMarkdown>
-    </div>
-  );
+  // Detect if the content is likely math
+  const isMath = fixed.includes("\\") || fixed.includes("$");
+
+  if (isMath) {
+    // Remove manual dollar signs as react-katex adds them
+    const cleanMath = fixed.replace(/\$/g, "");
+    return <InlineMath math={cleanMath} />;
+  }
+
+  return <span>{text}</span>;
 };
 
 export default Remarked;

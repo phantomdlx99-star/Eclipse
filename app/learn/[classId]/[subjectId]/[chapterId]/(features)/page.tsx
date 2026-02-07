@@ -38,6 +38,13 @@ const page = async ({
       image: "/images/flashcards.svg",
       slug: "flashcards",
     },
+    {
+      title: "AI Mind Mapper",
+      description:
+        "Visualize complex concepts with AI-generated interactive mind maps.",
+      image: "/images/mind-mapper.svg",
+      slug: "mind-mapper",
+    },
   ];
 
   return (

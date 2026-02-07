@@ -55,7 +55,7 @@ This is necessary so the backslashes survive JSON parsing.`;
   try {
     const result = await withRetry(() =>
       generateObject({
-        model: google("gemini-2.5-flash-lite"),
+        model: google("gemini-1.5-flash"),
         schema: quizSchema,
         prompt: prompt,
       }),
@@ -235,3 +235,91 @@ export async function getPrevQuizHistory(id: any) {
   console.log(history);
   return JSON.parse(JSON.stringify(history));
 }
+
+export const generateMindMap = async (
+  chapterId: string,
+  classId: string,
+  subjectId: string,
+  topic: string,
+) => {
+  const { userId } = await auth();
+  if (!userId) redirect("/sign-in");
+
+  const nodeSchema: any = z.lazy(() =>
+    z.object({
+      label: z.string(),
+      children: z.array(nodeSchema),
+    }),
+  );
+
+  const mindMapSchema = z.object({
+    root: nodeSchema,
+  });
+
+  try {
+    const result = await generateObject({
+      model: google("gemini-1.5-flash"),
+      schema: mindMapSchema,
+      prompt: `Generate a detailed recursive mind map for the topic "${topic}" (Class: ${classId}, Subject: ${subjectId}). 
+Return a JSON structure where "root" is the main topic, and "children" are sub-topics that can recursively have their own children.
+
+CRITICAL RULES:
+1. Language: EVERYTHING must be in Gujarati. English terms can be included in parentheses ONLY for technical terms.
+2. Math Formatting: All mathematical formulas, variables, and units MUST be wrapped in single dollar signs (e.g., $v = u + at$).
+3. LaTeX: Use DOUBLE BACKSLASHES for all LaTeX commands implies escaping them so they survive JSON parsing.
+   - CORRECT: "\\\\frac{a}{b}", "\\\\theta", "\\\\vec{v}"
+   - WRONG: "\\frac", "\\theta" (these will break)
+4. Accuracy: Ensure the concepts are accurate for Class ${classId} ${subjectId}.`,
+    });
+    return result.object;
+  } catch (error: any) {
+    console.error("Gemini Mindmap failed, switching to Groq:", error.message);
+    try {
+      const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+      const completion = await groq.chat.completions.create({
+        model: "openai/gpt-oss-120b",
+        messages: [
+          {
+            role: "system",
+            content: `You are a professional physics and science educator.
+Your goal is to generate high-quality, recursive Mind Maps for revision.
+
+CRITICAL FORMATTING RULES:
+1. Return ONLY a valid JSON object.
+2. All mathematical formulas, variables, and units MUST be wrapped in single dollar signs (e.g., $u^2$).
+3. You MUST use DOUBLE BACKSLASHES for all LaTeX commands.
+4. Language: Gujarati (with English terms in parentheses).
+
+JSON STRUCTURE:
+{
+  "root": {
+    "label": "Main Topic",
+    "children": [
+      {
+        "label": "Sub-topic 1",
+        "children": [
+          { "label": "Detail 1", "children": [] }
+        ]
+      }
+    ]
+  }
+}`,
+          },
+          {
+            role: "user",
+            content: `Generate a detailed recursive Mind Map for the topic "${topic}" (Class ${classId}, Subject: ${subjectId}).`,
+          },
+        ],
+        response_format: { type: "json_object" },
+      });
+
+      const rawJson = JSON.parse(completion.choices[0].message.content || "{}");
+      return rawJson;
+    } catch (error) {
+      console.error("All providers failed:", error);
+      return {
+        error: "Failed to generate Mind Map after multiple attempts.",
+      };
+    }
+  }
+};

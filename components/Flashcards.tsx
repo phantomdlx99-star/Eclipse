@@ -11,7 +11,12 @@ type Flashcard = {
   back: string[];
 };
 
-export default function Flashcards({ classId, subjectId, chapterId }: any) {
+export default function Flashcards({
+  classId,
+  subjectId,
+  chapterId,
+  topic: initialTopic,
+}: any) {
   const [loading, setLoading] = useState(false);
   const [flashcards, setFlashcards] = useState<Flashcard[] | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -24,7 +29,8 @@ export default function Flashcards({ classId, subjectId, chapterId }: any) {
     setIsFlipped(false);
 
     try {
-      const data = await generateFlashcards(chapterId, classId, subjectId);
+      const topic = initialTopic || chapterId;
+      const data = await generateFlashcards(topic, classId, subjectId);
 
       if (data && "error" in data) {
         toast.error(data.error as string);
@@ -138,7 +144,7 @@ export default function Flashcards({ classId, subjectId, chapterId }: any) {
                           className="flex gap-3 items-start animate-in slide-in-from-left duration-300"
                           style={{ animationDelay: `${sIdx * 100}ms` }}
                         >
-                          <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/20 text-primary text-xs flex items-center justify-center font-bold border border-primary/30">
+                          <span className="shrink-0 w-6 h-6 rounded-full bg-primary/20 text-primary text-xs flex items-center justify-center font-bold border border-primary/30">
                             {sIdx + 1}
                           </span>
                           <div className="prose prose-invert prose-sm max-w-none">
