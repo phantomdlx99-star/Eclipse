@@ -108,7 +108,7 @@ export default function Flashcards({
           <div className="flex flex-col items-center gap-8">
             {/* 3D Card Container */}
             <div
-              className="relative w-full max-w-2xl h-[400px] perspective-1000 cursor-pointer group"
+              className="relative w-full max-w-3xl h-[480px] perspective-1000 cursor-pointer group"
               onClick={handleFlip}
             >
               <div
@@ -122,7 +122,7 @@ export default function Flashcards({
                     <span className="absolute top-6 left-6 text-xs text-primary/80 uppercase tracking-widest font-bold">
                       Question
                     </span>
-                    <div className="prose prose-invert prose-lg max-w-none">
+                    <div className="prose prose-invert prose-base lg:prose-lg max-w-none wrap-break-word leading-relaxed">
                       <Remarked text={flashcards[currentIndex].front} />
                     </div>
                     <span className="absolute bottom-6 text-sm text-gray-500 animate-pulse">
@@ -133,21 +133,21 @@ export default function Flashcards({
 
                 {/* Back */}
                 <div className="absolute w-full h-full backface-hidden rotate-y-180">
-                  <div className="glass-nav w-full h-full rounded-3xl border border-primary/30 bg-primary/5 p-6 flex flex-col items-center justify-start overflow-y-auto shadow-[0_0_50px_-12px_rgba(var(--primary),0.2)]">
-                    <span className="mb-4 text-xs text-primary uppercase tracking-widest font-bold">
+                  <div className="glass-nav w-full h-full rounded-3xl border border-primary/30 bg-primary/5 p-10 flex flex-col items-center justify-start overflow-y-auto shadow-[0_0_50px_-12px_rgba(var(--primary),0.2)]">
+                    <span className="mb-8 text-xs text-primary uppercase tracking-widest font-bold">
                       Step-by-Step Answer
                     </span>
-                    <div className="w-full space-y-4 text-left">
+                    <div className="w-full space-y-6 text-left">
                       {flashcards[currentIndex].back.map((step, sIdx) => (
                         <div
                           key={sIdx}
-                          className="flex gap-3 items-start animate-in slide-in-from-left duration-300"
+                          className="flex gap-4 items-start animate-in slide-in-from-left duration-300"
                           style={{ animationDelay: `${sIdx * 100}ms` }}
                         >
-                          <span className="shrink-0 w-6 h-6 rounded-full bg-primary/20 text-primary text-xs flex items-center justify-center font-bold border border-primary/30">
+                          <span className="shrink-0 w-8 h-8 rounded-full bg-primary/20 text-primary text-sm flex items-center justify-center font-bold border border-primary/30">
                             {sIdx + 1}
                           </span>
-                          <div className="prose prose-invert prose-sm max-w-none">
+                          <div className="prose prose-invert prose-base lg:prose-lg max-w-none wrap-break-word leading-relaxed">
                             <Remarked text={step} />
                           </div>
                         </div>

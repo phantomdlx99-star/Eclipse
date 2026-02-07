@@ -1,26 +1,30 @@
 "use client";
 
 import React from "react";
+import ReactMarkdown from "react-markdown";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
-import { InlineMath, BlockMath } from "react-katex";
 
 const Remarked = ({ text }: { text: string }) => {
-  // Use your existing regex to clean the Groq AI output
+  // Pre-process text to handle common LaTeX escapes if needed
   let fixed = text
     .replace(/(?<!\\)frac\{/g, "\\frac{")
     .replace(/(?<!\\)vec\{/g, "\\vec{");
-  // ... other replaces from your file
 
-  // Detect if the content is likely math
-  const isMath = fixed.includes("\\") || fixed.includes("$");
-
-  if (isMath) {
-    // Remove manual dollar signs as react-katex adds them
-    const cleanMath = fixed.replace(/\$/g, "");
-    return <InlineMath math={cleanMath} />;
-  }
-
-  return <span>{text}</span>;
+  return (
+    <div className="markdown-content">
+      <ReactMarkdown
+        remarkPlugins={[remarkMath]}
+        rehypePlugins={[rehypeKatex]}
+        components={{
+          p: ({ children }) => <span className="inline-block">{children}</span>,
+        }}
+      >
+        {fixed}
+      </ReactMarkdown>
+    </div>
+  );
 };
 
 export default Remarked;
