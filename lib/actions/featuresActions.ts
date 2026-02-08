@@ -26,6 +26,61 @@ async function withRetry<T>(
   }
 }
 
+/**
+ * Normalizes LaTeX formatting from different AI providers.
+ * Converts \( \) to $ and \[ \] to $$ for consistency.
+ */
+function normalizeLaTeX(text: string): string {
+  if (typeof text !== "string") return text;
+  return text
+    .replace(/\\\\\(/g, "$")
+    .replace(/\\\\\)/g, "$")
+    .replace(/\\\\\s*\[/g, "$$")
+    .replace(/\\\\\s*\]/g, "$$")
+    .replace(/\\\(/g, "$")
+    .replace(/\\\)/g, "$")
+    .replace(/\\\[/g, "$$")
+    .replace(/\\\]/g, "$$");
+}
+
+/**
+ * Recursively processes the AI response to normalize LaTeX and tag with provider.
+ */
+function processAIResponse(data: any, provider: "gemini" | "groq"): any {
+  if (!data) return data;
+
+  if (Array.isArray(data)) {
+    return data.map((item) => processAIResponse(item, provider));
+  }
+
+  if (typeof data === "object") {
+    const processed: any = Array.isArray(data) ? [] : {};
+
+    // If it's a "main" entity (question, flashcard, or mindmap node), add the provider
+    if (data.question || data.front || data.label) {
+      processed.provider = provider;
+    }
+
+    for (const key in data) {
+      const value = data[key];
+      if (typeof value === "string") {
+        processed[key] = normalizeLaTeX(value);
+      } else if (typeof value === "object" && value !== null) {
+        processed[key] = processAIResponse(value, provider);
+      } else {
+        processed[key] = value;
+      }
+    }
+    return processed;
+  }
+
+  if (typeof data === "string") {
+    return normalizeLaTeX(data);
+  }
+
+  return data;
+}
+
 const generateQuiz = async (
   topic: string,
   classId: string,
@@ -60,7 +115,7 @@ This is necessary so the backslashes survive JSON parsing.`;
         prompt: prompt,
       }),
     );
-    return result.object;
+    return processAIResponse(result.object, "gemini");
   } catch (error: any) {
     console.error("Gemini failed, switching to Groq:", error.message);
 
@@ -105,7 +160,7 @@ JSON STRUCTURE:
       });
 
       const rawJson = JSON.parse(completion.choices[0].message.content || "{}");
-      return rawJson.quizzes;
+      return processAIResponse(rawJson.quizzes, "groq");
     } catch (fallbackError: any) {
       console.error("All providers failed:", fallbackError);
       return { error: "Failed to generate quiz after multiple attempts." };
@@ -144,12 +199,12 @@ This is necessary so the backslashes survive JSON parsing.`;
   try {
     const result = await withRetry(() =>
       generateObject({
-        model: google("gemini-2.5-flash-lite"),
+        model: google("gemini-1.5-flash"), // Corrected from gemini-2.5-flash-lite
         schema: flashcardSchema,
         prompt: prompt,
       }),
     );
-    return result.object;
+    return processAIResponse(result.object, "gemini");
   } catch (error: any) {
     console.error("Gemini failed, switching to Groq:", error.message);
 
@@ -189,7 +244,7 @@ JSON STRUCTURE:
       });
 
       const rawJson = JSON.parse(completion.choices[0].message.content || "{}");
-      return rawJson.flashcards;
+      return processAIResponse(rawJson.flashcards, "groq");
     } catch (fallbackError: any) {
       console.error("All providers failed:", fallbackError);
       return {
@@ -271,7 +326,7 @@ CRITICAL RULES:
    - WRONG: "\\frac", "\\theta" (these will break)
 4. Accuracy: Ensure the concepts are accurate for Class ${classId} ${subjectId}.`,
     });
-    return result.object;
+    return processAIResponse(result.object, "gemini");
   } catch (error: any) {
     console.error("Gemini Mindmap failed, switching to Groq:", error.message);
     try {
@@ -314,7 +369,7 @@ JSON STRUCTURE:
       });
 
       const rawJson = JSON.parse(completion.choices[0].message.content || "{}");
-      return rawJson;
+      return processAIResponse(rawJson, "groq");
     } catch (error) {
       console.error("All providers failed:", error);
       return {

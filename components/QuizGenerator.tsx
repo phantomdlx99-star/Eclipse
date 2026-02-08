@@ -165,7 +165,7 @@ export default function QuizGenerator({
                   <h1 className="text-xl font-display text-white font-semibold">
                     {qIdx + 1}.
                   </h1>
-                  <Remarked text={q.question} />
+                  <Remarked text={q.question} provider={q.provider} />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5">
@@ -189,7 +189,7 @@ export default function QuizGenerator({
                         disabled={hasAnswered}
                         className={`text-left p-4 rounded-xl border border-border transition-all font-display ${bgColor} ${!hasAnswered && "hover:bg-primary/20 hover:border-primary/50 font-display cursor-pointer text-lg"}`}
                       >
-                        <Remarked text={opt} />
+                        <Remarked text={opt} provider={q.provider} />
                       </button>
                     );
                   })}

@@ -122,8 +122,11 @@ export default function Flashcards({
                     <span className="absolute top-6 left-6 text-xs text-primary/80 uppercase tracking-widest font-bold">
                       Question
                     </span>
-                    <div className="prose prose-invert prose-base lg:prose-lg max-w-none wrap-break-word leading-relaxed">
-                      <Remarked text={flashcards[currentIndex].front} />
+                    <div className="prose prose-invert prose-base lg:prose-lg max-w-none wrap-break-word leading-relaxed anek-gujarati text-xl ">
+                      <Remarked
+                        text={flashcards[currentIndex].front}
+                        provider={(flashcards[currentIndex] as any).provider}
+                      />
                     </div>
                     <span className="absolute bottom-6 text-sm text-gray-500 animate-pulse">
                       Click to flip
@@ -133,7 +136,7 @@ export default function Flashcards({
 
                 {/* Back */}
                 <div className="absolute w-full h-full backface-hidden rotate-y-180">
-                  <div className="glass-nav w-full h-full rounded-3xl border border-primary/30 bg-primary/5 p-10 flex flex-col items-center justify-start overflow-y-auto shadow-[0_0_50px_-12px_rgba(var(--primary),0.2)]">
+                  <div className="glass-nav w-full h-full rounded-3xl border border-primary/30 bg-primary/5 p-10 flex flex-col items-center justify-start overflow-y-auto shadow-[0_0_50px_-12px_rgba(var(--primary),0.2)] anek-gujarati text-2xl">
                     <span className="mb-8 text-xs text-primary uppercase tracking-widest font-bold">
                       Step-by-Step Answer
                     </span>
@@ -148,7 +151,12 @@ export default function Flashcards({
                             {sIdx + 1}
                           </span>
                           <div className="prose prose-invert prose-base lg:prose-lg max-w-none wrap-break-word leading-relaxed">
-                            <Remarked text={step} />
+                            <Remarked
+                              text={step}
+                              provider={
+                                (flashcards[currentIndex] as any).provider
+                              }
+                            />
                           </div>
                         </div>
                       ))}

@@ -38,6 +38,7 @@ import Remarked from "@/components/Remarked";
 interface MindMapNodeData {
   label: string;
   children: MindMapNodeData[];
+  provider?: string;
 }
 
 interface MindMapData {
@@ -123,7 +124,7 @@ const CustomNode = ({ data }: any) => {
       />
 
       <div className="flex-1 min-w-0">
-        <Remarked text={data.label} />
+        <Remarked text={data.label} provider={data.provider} />
       </div>
 
       {hasChildren && (
@@ -195,6 +196,7 @@ const MindMap = ({
         type: "mindmap",
         data: {
           label: node.label,
+          provider: node.provider,
           isRoot: depth === 0,
           isExpanded: isExpanded,
           children: node.children,
