@@ -161,7 +161,7 @@ export default function QuizGenerator({
                 key={qIdx}
                 className="glass-nav p-6 rounded-2xl border border-white/10"
               >
-                <div className="flex justify-start gap-2">
+                <div className="flex anek-gujarati text-2xl  justify-start gap-2">
                   <h1 className="text-xl font-display text-white font-semibold">
                     {qIdx + 1}.
                   </h1>
@@ -187,7 +187,7 @@ export default function QuizGenerator({
                         key={opt}
                         onClick={() => handleSelect(qIdx, opt)}
                         disabled={hasAnswered}
-                        className={`text-left p-4 rounded-xl border border-border transition-all font-display ${bgColor} ${!hasAnswered && "hover:bg-primary/20 hover:border-primary/50 font-display cursor-pointer text-lg"}`}
+                        className={`text-left p-4 rounded-xl border border-border transition-all font-display ${bgColor} ${!hasAnswered && "hover:bg-primary/20 hover:border-primary/50 font-display cursor-pointer anek-guajarti text-2xl"}`}
                       >
                         <Remarked text={opt} provider={q.provider} />
                       </button>

@@ -4,6 +4,7 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { Toaster } from "@/components/ui/sonner";
+import { MathJaxContext } from "better-react-mathjax";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,6 +26,31 @@ export const metadata: Metadata = {
   description: "Created by Phoenix",
 };
 
+const configMath = {
+  loader: { load: ["input/tex", "output/chtml"] },
+  tex: {
+    inlineMath: [
+      ["$", "$"],
+      ["\\(", "\\)"],
+    ],
+    displayMath: [
+      ["$$", "$$"],
+      ["\\[", "\\]"],
+    ],
+    processEscapes: true,
+  },
+  options: {
+    enableMenu: false, // Disabling the context menu speeds up initial rendering
+    renderActions: {
+      addMenu: [], // Further optimizes performance by removing menu logic
+    },
+  },
+  chtml: {
+    fontURL:
+      "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2",
+  },
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -40,12 +66,14 @@ export default function RootLayout({
       }}
     >
       <html lang="en" className="dark">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased ubuntu-medium selection:bg-yellow-400 focus-glow`}
-        >
-          <main>{children}</main>
-          <Toaster />
-        </body>
+        <MathJaxContext config={configMath}>
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased ubuntu-medium selection:bg-yellow-400 focus-glow`}
+          >
+            <main>{children}</main>
+            <Toaster />
+          </body>
+        </MathJaxContext>
       </html>
     </ClerkProvider>
   );

@@ -32,17 +32,29 @@ async function withRetry<T>(
  */
 function normalizeLaTeX(text: string): string {
   if (typeof text !== "string") return text;
-  return text
-    .replace(/\\\\\(/g, "$")
-    .replace(/\\\\\)/g, "$")
-    .replace(/\\\\\s*\[/g, "$$")
-    .replace(/\\\\\s*\]/g, "$$")
-    .replace(/\\\(/g, "$")
-    .replace(/\\\)/g, "$")
-    .replace(/\\\[/g, "$$")
-    .replace(/\\\]/g, "$$");
-}
 
+  return (
+    text
+      // 1. Convert various AI delimiters to standard $
+      .replace(/\\{2,}\(/g, "$")
+      .replace(/\\{2,}\)/g, "$")
+      .replace(/\\{2,}\[/g, "$$")
+      .replace(/\\{2,}\]/g, "$$")
+      .replace(/\\\(/g, "$")
+      .replace(/\\\)/g, "$")
+      .replace(/\\\[/g, "$$")
+      .replace(/\\\]/g, "$$")
+      // Fix the weird single quote delimiter seen in your screenshot ($...$')
+      .replace(/\$'/g, "$")
+
+      // 2. Wrap bare physics terms in backslashes if they are inside $ blocks
+      // This fixes "mu" -> "\mu", "times" -> "\times", etc.
+      .replace(/(?<=[\$])\b(mu|theta|alpha|beta|pi|times|vec|hat)\b/g, "\\$1")
+
+      // 3. Fix double backslashes that sometimes get tripled by JSON parsing
+      .replace(/\\{3,}/g, "\\\\")
+  );
+}
 /**
  * Recursively processes the AI response to normalize LaTeX and tag with provider.
  */
@@ -216,21 +228,34 @@ This is necessary so the backslashes survive JSON parsing.`;
         messages: [
           {
             role: "system",
-            content: `You are a professional physics and science educator.
-Your goal is to generate high-quality flashcards for revision.
+            content: `You are an expert Physics and Mathematics educator specializing in the Gujarat State Board (GSEB) curriculum.
 
-CRITICAL FORMATTING RULES:
-1. Return ONLY a valid JSON object.
-2. All mathematical formulas, variables, and units MUST be wrapped in single dollar signs (e.g., $u^2$).
-3. You MUST use DOUBLE BACKSLASHES for all LaTeX commands.
-4. Language: Gujarati (with English terms in parentheses).
+  PRIMARY DIRECTIVE:
+  - All explanatory text and labels MUST be in the GUJARATI language.
+  - Use English technical terms ONLY in parentheses following the Gujarati term, e.g., "પ્રવેગ (Acceleration)".
+  - NEVER output text in Chinese, Hindi, or any language other than Gujarati and English.
+            
+MATHEMATICAL & LATEX FORMATTING:
+1. DELIMITERS: Wrap ALL mathematical formulas, variables (like $x$, $y$, $v$), and units in single dollar signs: $...$.
+2. JSON ESCAPING: You MUST use DOUBLE BACKSLASHES for all LaTeX commands so they survive JSON parsing.
+   - CORRECT: \\frac{a}{b}, \\theta, \\vec{v}, \\hat{i}, \\mu
+   - WRONG: \frac{a}{b}, \theta
+3. NO PLAIN TEXT MATH: Do not write "mu" or "times". Write $\mu$ and $\times$ using LaTeX syntax: $\\mu$ and $\\times$.
 
-JSON STRUCTURE:
+RESPONSE STRUCTURE:
+- Return ONLY a valid JSON object. 
+- Ensure the "back" of flashcards is a detailed, logical array of steps.
+- If a formula is the final answer, ensure it is clearly stated in its own step.
+
+JSON STRUCTURE REFERENCE:
 {
   "flashcards": [
     {
-      "front": "Concept or Question",
-      "back": ["Step 1 explanation", "Step 2 explanation", "Conclusion"]
+      "front": "Gujarati question here with $math$",
+      "back": [
+        "Step 1 in Gujarati with $math$",
+        "Step 2 in Gujarati with $math$"
+      ]
     }
   ]
 }`,
@@ -244,6 +269,7 @@ JSON STRUCTURE:
       });
 
       const rawJson = JSON.parse(completion.choices[0].message.content || "{}");
+      console.log(rawJson);
       return processAIResponse(rawJson.flashcards, "groq");
     } catch (fallbackError: any) {
       console.error("All providers failed:", fallbackError);

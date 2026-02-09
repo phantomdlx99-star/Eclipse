@@ -109,7 +109,7 @@ const CustomNode = ({ data }: any) => {
   return (
     <div
       className={`
-        px-6 py-4 rounded-3xl border transition-all duration-300 flex items-center gap-4 min-w-[200px] max-w-[400px]
+        px-6 py-4 rounded-3xl border transition-all duration-300 flex items-center gap-4 min-w-[200px] max-w-[400px] h-auto
         ${
           data.isRoot
             ? "bg-linear-to-br from-indigo-500/20 to-purple-500/20 border-indigo-500/50 shadow-[0_0_30px_-10px_rgba(99,102,241,0.3)] backdrop-blur-xl"
@@ -123,7 +123,7 @@ const CustomNode = ({ data }: any) => {
         className="bg-neutral-600! w-2! h-2! opacity-0"
       />
 
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 h-auto w-auto">
         <Remarked text={data.label} provider={data.provider} />
       </div>
 
