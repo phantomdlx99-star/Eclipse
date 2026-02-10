@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import ReactMarkdown from "react-markdown"; // Import Markdown
+import Remarked from "@/components/Remarked";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import remarkGfm from "remark-gfm";
 
 export default function Page() {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>(
@@ -89,9 +88,7 @@ export default function Page() {
             >
               {/* 4. Use ReactMarkdown to render content */}
               <div className="prose prose-invert max-w-none text-xl md:text-xl">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                  {m.content}
-                </ReactMarkdown>
+                <Remarked text={m.content} provider="groq" />
               </div>
             </div>
           </div>

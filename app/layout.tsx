@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 };
 
 const configMath = {
-  loader: { load: ["input/tex", "output/chtml"] },
+  loader: { load: ["input/tex", "output/svg"] },
   tex: {
     inlineMath: [
       ["$", "$"],
@@ -45,9 +45,8 @@ const configMath = {
       addMenu: [], // Further optimizes performance by removing menu logic
     },
   },
-  chtml: {
-    fontURL:
-      "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2",
+  svg: {
+    fontCache: "global",
   },
 };
 

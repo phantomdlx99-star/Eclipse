@@ -122,7 +122,8 @@ export default function Flashcards({
                     <span className="absolute top-6 left-6 text-xs text-primary/80 uppercase tracking-widest font-bold">
                       Question
                     </span>
-                    <div className="prose prose-invert prose-base lg:prose-lg max-w-none wrap-break-word leading-relaxed anek-gujarati text-xl ">
+                    {/* Removed 'prose' and added 'overflow-visible' */}
+                    <div className="w-full max-w-none wrap-break-word anek-gujarati text-2xl overflow-auto">
                       <Remarked
                         text={flashcards[currentIndex].front}
                         provider={(flashcards[currentIndex] as any).provider}
@@ -133,7 +134,6 @@ export default function Flashcards({
                     </span>
                   </div>
                 </div>
-
                 {/* Back */}
                 <div className="absolute w-full h-full backface-hidden rotate-y-180">
                   <div className="glass-nav w-full h-full rounded-3xl border border-primary/30 bg-primary/5 p-10 flex flex-col items-center justify-start overflow-y-auto shadow-[0_0_50px_-12px_rgba(var(--primary),0.2)] anek-gujarati text-2xl">
@@ -150,7 +150,7 @@ export default function Flashcards({
                           <span className="shrink-0 w-8 h-8 rounded-full bg-primary/20 text-primary text-sm flex items-center justify-center font-bold border border-primary/30">
                             {sIdx + 1}
                           </span>
-                          <div className="prose prose-invert prose-base lg:prose-lg max-w-none wrap-break-word leading-relaxed">
+                          <div className="prose prose-invert prose-base lg:prose-lg max-w-none wrap-break-word leading-relaxed overflow-x-auto">
                             <Remarked
                               text={step}
                               provider={
@@ -212,6 +212,31 @@ export default function Flashcards({
         }
         .rotate-y-180 {
           transform: rotateY(180deg);
+        }
+
+        /* --- NEW FIXES FOR MATH CLIPPING --- */
+
+        :global(.math-container mjx-container) {
+          display: inline-block !important;
+          margin: 0 0.2em !important;
+          vertical-align: middle !important;
+          /* Ensure the internal math svg doesn't get clipped */
+          overflow: visible !important;
+        }
+
+        :global(.math-container mjx-container svg) {
+          overflow: visible !important;
+        }
+
+        /* Increase line height for Gujarati + Math to prevent overlap */
+        .anek-gujarati {
+          line-height: 2 !important;
+        }
+
+        /* Remove any prose-imposed height restrictions */
+        :global(.prose) {
+          max-width: none !important;
+          overflow: visible !important;
         }
       `}</style>
     </div>
