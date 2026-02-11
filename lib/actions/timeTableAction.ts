@@ -49,7 +49,8 @@ export async function generateTimeTable(prompt: string) {
           2. Use "Revision" or "Rest" for days as appropriate if not specified.
           3. Make the topics specific, actionable, and suitable for the student's level.
           4. Each object in the "timetable" array must have a "day" string and a "schedule" array.
-          5. Return ONLY the JSON object.`,
+          5. Return the days in order from Monday to Sunday.
+          6. Return ONLY the JSON object.`,
         },
         {
           role: "user",

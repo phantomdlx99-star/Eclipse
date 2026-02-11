@@ -25,13 +25,6 @@ const page = async ({
       slug: "quiz-generator",
     },
     {
-      title: "Smart Study Reminders",
-      description:
-        "Never miss a study session with AI-driven reminders that adapt to your schedule.",
-      image: "/images/study-reminders.svg",
-      slug: "study-reminders",
-    },
-    {
       title: "Interactive Flashcards",
       description:
         "Master key concepts with AI-generated flashcards and active recall.",

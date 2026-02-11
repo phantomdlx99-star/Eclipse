@@ -4,6 +4,7 @@ import { Card } from "./ui/card";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { ArrowRight } from "lucide-react";
+import { toast } from "sonner";
 const PersonalizedLearning = ({
   classId,
   subjectId,
@@ -21,13 +22,44 @@ const PersonalizedLearning = ({
     setLoading(true);
     try {
       const result = await generateTimeTable(
-        `Generate a timetable for a student who wants to prepare for the JEE exam in 6 months. The student has 6 hours of study time per day and wants to cover. The timetable should be for 6 days a week with one day for revision. The student is in ${classId}`,
+        `Generate a timetable for a student who wants to prepare for the JEE exam in 6 months. The student has 6 hours of study time per day and wants to cover the course. The timetable should be for 6 days a week with one day for revision. The student is in ${classId}`,
       );
+
+      if (result && result.timetable) {
+        const dayOrder: { [key: string]: number } = {
+          monday: 0,
+          mon: 0,
+          tuesday: 1,
+          tue: 1,
+          wednesday: 2,
+          wed: 2,
+          thursday: 3,
+          thu: 3,
+          friday: 4,
+          fri: 4,
+          saturday: 5,
+          sat: 5,
+          sunday: 6,
+          sun: 6,
+        };
+
+        result.timetable.sort((a: any, b: any) => {
+          const dayA = (a.day || "").toLowerCase().trim();
+          const dayB = (b.day || "").toLowerCase().trim();
+          return (dayOrder[dayA] ?? 99) - (dayOrder[dayB] ?? 99);
+        });
+      }
+
       setLoading(false);
       setTime(result);
+      return toast.success("TimeTable generated successfully.", {
+        position: "top-center",
+      });
     } catch (error: any) {
       setLoading(false);
-      throw new Error("Failed to generate timetable: ", error);
+      return toast.error(`Failed to generate timetable: ${error}`, {
+        position: "top-center",
+      });
     }
   };
 
@@ -41,7 +73,7 @@ const PersonalizedLearning = ({
             disabled={time !== null}
             className="text-xl font-bold disabled:opacity-50"
           >
-            Generate TimeTable
+            {loading ? "Generating..." : "Generate TimeTable"}
           </Button>
           {time && (
             <Button
@@ -85,7 +117,7 @@ const PersonalizedLearning = ({
                           {sch.subject}
                         </div>
                         <div className="w-auto h-auto flex flex-col items-start px-4">
-                          <li className="text-start list-none before:absolute before:content-[''] before:w-2 before:h-2 before:rounded-full before:bg-linear-to-r before:from-primary before:to-secondary before:-left-4 before:top-3 before:-translate-y-1/2 relative">
+                          <li className="text-start list-none before:absolute before:content-[''] before:w-2 before:h-2 before:rounded-full before:bg-linear-to-r before:from-primary before:to-secondary before:-left-4 before:top-3 before:-translate-y-1/2 relative wrap-break-word">
                             {sch.topic}
                           </li>
                         </div>
