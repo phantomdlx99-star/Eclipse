@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import Flashcards from "@/components/Flashcards";
 import MindMap from "@/components/MindMap";
+import PersonalizedLearning from "@/components/PersonalizedLearning";
 
 import { GSEB_CURRICULUM } from "@/lib/constant";
 
@@ -57,6 +58,20 @@ const page = async ({
         <main className="w-full h-auto">
           <Suspense fallback={<Loading />}>
             <MindMap
+              classId={classId}
+              subjectId={subjectId}
+              chapterId={chapterId}
+              topic={chapterTitle}
+            />
+          </Suspense>
+        </main>
+      );
+
+    case "personalized-learning":
+      return (
+        <main>
+          <Suspense fallback={<Loading />}>
+            <PersonalizedLearning
               classId={classId}
               subjectId={subjectId}
               chapterId={chapterId}
