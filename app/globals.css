@@ -27,6 +27,22 @@
   font-size: 19px;
 }
 
+/* Initial state: slightly lower and transparent */
+/* In your globals.css */
+.hidden-state {
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none; /* Prevents clicking invisible cards */
+  transition: all 0.6s ease-out;
+}
+
+.animate-in {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  transition: all 0.6s ease-out;
+}
+
 ::-webkit-scrollbar-track {
   background: #0f0f1a; /* Matches background */
 }

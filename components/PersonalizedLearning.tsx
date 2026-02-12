@@ -2,8 +2,8 @@
 import { generateTimeTable } from "@/lib/actions/timeTableAction";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
-import { useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { ArrowUp } from "lucide-react";
 import { toast } from "sonner";
 const PersonalizedLearning = ({
   classId,
@@ -64,10 +64,36 @@ const PersonalizedLearning = ({
   };
 
   console.log(time);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const handleScroll = () => {
+    containerRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+  const [visible, setVisible] = useState(false);
+  const handleVisibility = () => {
+    window.scrollY > 100 ? setVisible(true) : setVisible(false);
+  };
+  useEffect(() => {
+    window.addEventListener("scroll", handleVisibility);
+    return () => window.removeEventListener("scroll", handleVisibility);
+  }, []);
   return (
     <main className="font-display">
       <div>
-        <div className="w-full h-auto flex justify-center gap-5">
+        <div
+          className="w-full h-auto flex justify-center gap-5"
+          ref={containerRef}
+        >
+          <Button
+            onClick={handleScroll}
+            className={
+              visible ? "rounded-full fixed bottom-5 right-5" : "hidden"
+            }
+          >
+            <ArrowUp size={30} />
+          </Button>
           <Button
             onClick={generatePaths}
             disabled={time !== null}
