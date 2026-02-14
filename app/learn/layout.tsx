@@ -21,6 +21,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         />
       </div>
       {children}
+      <div className="w-full h-auto px-4 py-2 text-center font-semibold font-display">
+        AI responses might be inaccurate so double-check the response
+      </div>
     </main>
   );
 };
