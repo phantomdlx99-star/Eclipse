@@ -477,3 +477,24 @@ export const GSEB_CURRICULUM: ClassLevel[] = [
     ],
   },
 ];
+
+export const LEGAL = [
+  {
+    label: "Privacy Policy",
+    name: "privacy-policy",
+    content:
+      "At Eclipse, we prioritize your data security. We collect minimal personal information to provide you with personalized AI-driven learning paths, study schedules, and progress tracking. Your interactions with our AI tools, such as the Mind Map and Flashcard generators, are used to refine your experience. We never sell your data to third parties and use industry-standard encryption to keep your information safe and private.",
+  },
+  {
+    label: "Terms of Use",
+    name: "terms-of-use",
+    content:
+      "By using Eclipse, you agree to use our platform for educational purposes only. All content, including courses, curriculum materials, and AI-generated study aids, is the intellectual property of Eclipse. You may not redistribute, sell, or modify our content without explicit permission. Users are responsible for maintaining account security and must comply with all local and international laws while using our services.",
+  },
+  {
+    label: "Disclaimer",
+    name: "disclaimer",
+    content:
+      "The information provided on Eclipse, including AI-generated timetables and study materials, is for supplemental educational purposes only. While we strive for accuracy in our GSEB curriculum and AI responses, we do not guarantee that all content is error-free. Eclipse is not liable for any academic outcomes or decisions made based on the platform's content. We recommend cross-referencing with official textbooks for critical exam preparation.",
+  },
+];

@@ -22,6 +22,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Link as ScrollLink, Element } from "react-scroll";
+import { LEGAL } from "@/lib/constant";
+import DialogBox from "@/components/DialogBox";
 
 export default function EclipseLanding() {
   // Intersection Observer for fade-in animations
@@ -414,34 +416,27 @@ export default function EclipseLanding() {
               <h4 className="text-white font-bold mb-4">Company</h4>
               <ul className="space-y-2 text-sm text-gray-400">
                 {["About Us", "Careers", "Blog", "Contact"].map((item) => (
-                  <li key={item}>
-                    <a
-                      href="#"
+                  <li key={item} className="w-auto">
+                    <Link
+                      href={`/${item.toLowerCase().replace(" ", "-")}`}
                       className="hover:text-primary transition-colors"
                     >
                       {item}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div>
+            <div className="flex w-full flex-col items-center justify-between gap-2">
               <h4 className="text-white font-bold mb-4">Legal</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                {["Terms of Use", "Privacy Policy", "Cookie Policy"].map(
-                  (item) => (
-                    <li key={item}>
-                      <a
-                        href="#"
-                        className="hover:text-primary transition-colors"
-                      >
-                        {item}
-                      </a>
-                    </li>
-                  ),
-                )}
-              </ul>
+              {LEGAL.map((item: any, idx: any) => (
+                <DialogBox
+                  label={item.label}
+                  content={item.content}
+                  key={idx}
+                />
+              ))}
             </div>
           </div>
 
