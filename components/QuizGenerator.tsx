@@ -5,11 +5,19 @@ import { useState } from "react";
 import { saveQuizResult } from "@/lib/actions/featuresActions";
 import { toast } from "sonner";
 import Link from "next/link";
-import ReactMarkdown from "react-markdown";
-import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css"; // Import the math styles
 import Remarked from "./Remarked";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import axios from "axios";
 import {
   Select,
   SelectContent,
@@ -19,6 +27,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Flag } from "lucide-react";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 
 type Quiz = {
   question: string;
@@ -32,13 +43,14 @@ export default function QuizGenerator({
   chapterId,
   topic: initialTopic,
 }: any) {
+  const [issue, setIssue] = useState("");
+  const [other, setOther] = useState("");
   const [loading, setLoading] = useState(false);
   const [quiz, setQuiz] = useState<Quiz[] | null>(null);
   const [selectedAnswers, setSelectedAnswers] = useState<
     Record<number, string>
   >({});
   const [value, setValue] = useState("5");
-
   const handleGenerate = async () => {
     setLoading(true);
     try {
@@ -80,6 +92,42 @@ export default function QuizGenerator({
   const isFinished = totalQuestions > 0 && answeredCount === totalQuestions;
 
   const [saved, setSaved] = useState(false);
+  console.log(quiz);
+
+  const handleIssue = async (question: string) => {
+    try {
+      const issueToReport = issue === "other" ? other : issue;
+      if (!issueToReport) {
+        return toast.error("Please specify the issue");
+      }
+
+      const res = await axios.post("/api/issue", {
+        question,
+        issue: issueToReport,
+      });
+
+      if (res.data.error) {
+        return toast.error(res.data.error);
+      }
+
+      setIssue("");
+      setOther("");
+      return toast.success(
+        res.data.message || "Your issue is reported successfully!",
+        {
+          position: "top-center",
+        },
+      );
+    } catch (error: any) {
+      console.error("Error reporting issue:", error);
+      const errorMessage =
+        error.response?.data?.error ||
+        "Failed to report issue. Please try again.";
+      return toast.error(errorMessage, {
+        position: "top-center",
+      });
+    }
+  };
 
   const handleSave = async () => {
     const resultData = {
@@ -122,7 +170,7 @@ export default function QuizGenerator({
           </p>
           <Select value={value} onValueChange={setValue}>
             <SelectTrigger className="w-full max-w-48">
-              <SelectValue placeholder="Select a fruit" />
+              <SelectValue placeholder="Number of questions" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
@@ -159,14 +207,78 @@ export default function QuizGenerator({
             {quiz?.map((q: any, qIdx) => (
               <div
                 key={qIdx}
-                className="glass-nav p-6 rounded-2xl border border-white/10"
+                className="glass-nav p-6 rounded-2xl border border-white/10 relative"
               >
-                <div className="flex anek-gujarati text-2xl  justify-start gap-2">
+                <div className="flex anek-gujarati text-2xl  justify-start gap-2 items-center ">
                   <h1 className="text-xl font-display text-white font-semibold">
                     {qIdx + 1}.
                   </h1>
-                  <Remarked text={q.question} provider={q.provider} />
+                  <Remarked text={q.question} />
                 </div>
+                <Drawer>
+                  <DrawerTrigger asChild>
+                    <div className="absolute top-4 right-4 overflow-hidden rounded-full bg-transparent hover:bg-secondary p-2 cursor-pointer transition flex justify-center items-center">
+                      <Flag size={20} />
+                    </div>
+                  </DrawerTrigger>
+                  <DrawerContent>
+                    <div className="mx-auto w-full max-w-sm font-display">
+                      <DrawerHeader>
+                        <DrawerTitle className="text-3xl">Report</DrawerTitle>
+                        <DrawerDescription>
+                          Write the issues with the questions/answeres
+                        </DrawerDescription>
+                      </DrawerHeader>
+                      <div className="p-4 pb-0">
+                        <div className="flex items-center justify-center space-x-2">
+                          <Select value={issue} onValueChange={setIssue}>
+                            <SelectTrigger className="w-full">
+                              <SelectValue
+                                placeholder="Select the issue"
+                                className="font-bold text-text"
+                              />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectGroup>
+                                <SelectLabel>Select the issue</SelectLabel>
+                                <SelectItem value="typo">
+                                  Typing Error
+                                </SelectItem>
+                                <SelectItem value="wrong-answer">
+                                  Wrong Answer
+                                </SelectItem>
+                                <SelectItem value="wrong-question">
+                                  Wrong Question
+                                </SelectItem>
+                                <SelectItem value="other">Other</SelectItem>
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="h-[120px] flex items-center justify-center space-x-2">
+                          {issue === "other" && (
+                            <Input
+                              placeholder="Enter the issue"
+                              className="w-full"
+                              value={other}
+                              onChange={(e) => setOther(e.target.value)}
+                            />
+                          )}
+                        </div>
+                      </div>
+                      <DrawerFooter>
+                        <DrawerClose asChild>
+                          <Button onClick={() => handleIssue(q.question)}>
+                            Submit
+                          </Button>
+                        </DrawerClose>
+                        <DrawerClose asChild>
+                          <Button variant="outline">Cancel</Button>
+                        </DrawerClose>
+                      </DrawerFooter>
+                    </div>
+                  </DrawerContent>
+                </Drawer>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5">
                   {q.options.map((opt: string) => {
@@ -187,9 +299,9 @@ export default function QuizGenerator({
                         key={opt}
                         onClick={() => handleSelect(qIdx, opt)}
                         disabled={hasAnswered}
-                        className={`text-left p-4 rounded-xl border border-border transition-all font-display ${bgColor} ${!hasAnswered && "hover:bg-primary/20 hover:border-primary/50 font-display cursor-pointer anek-guajarti text-2xl"}`}
+                        className={`text-left w-full h-full p-4 rounded-xl border text-xl border-border transition-all font-display ${bgColor} ${!hasAnswered && "hover:bg-primary/20 hover:border-primary/50 font-display cursor-pointer anek-guajarti"}`}
                       >
-                        <Remarked text={opt} provider={q.provider} />
+                        <Remarked text={opt} />
                       </button>
                     );
                   })}
